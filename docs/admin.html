@@ -113,6 +113,8 @@ footer{color:var(--mut);font-size:.78rem;text-align:center;padding:0 0 var(--s5)
     <button class="tab" role="tab" aria-selected="false" data-tab="stock">Stock</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="ventas">Ventas</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="comisiones">Comisiones</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="clientes">Clientes</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="presup">Presupuestos</button>
   </div></nav>
 
   <main><div class="wrap">
@@ -203,6 +205,67 @@ footer{color:var(--mut);font-size:.78rem;text-align:center;padding:0 0 var(--s5)
         </table></div>
       </div>
     </section>
+
+    <!-- CLIENTES -->
+    <section id="tab-clientes" hidden>
+      <div class="card">
+        <h2>Nuevo cliente</h2>
+        <form id="cliente-form">
+          <div class="toolbar-row">
+            <div class="field"><label for="c-nombre">Nombre *</label><input id="c-nombre" required></div>
+            <div class="field"><label for="c-tel">Teléfono *</label><input id="c-tel" required placeholder="549..."></div>
+            <div class="field"><label for="c-patente">Patente</label><input id="c-patente" placeholder="ABC123"></div>
+            <div class="field"><label for="c-auto">Auto</label><input id="c-auto" placeholder="Gol Trend 2015"></div>
+          </div>
+          <div class="toolbar-row">
+            <div class="field"><label for="c-notas">Notas</label><input id="c-notas" placeholder="Ej.: lo deriva Trucco"></div>
+            <button class="btn small" type="submit">Agregar cliente</button>
+            <button class="btn ghost small" id="btn-csv-clientes" type="button">Descargar clientes.csv</button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Clientes</h2>
+        <div class="table-wrap"><table id="t-clientes">
+          <tr><th>Nombre</th><th>Teléfono</th><th>Patente</th><th>Auto</th><th class="num">Presup.</th></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- PRESUPUESTOS -->
+    <section id="tab-presup" hidden>
+      <div class="card">
+        <h2>Nuevo presupuesto</h2>
+        <form id="pres-form">
+          <div class="toolbar-row">
+            <div class="field"><label for="p-cliente">Cliente *</label><select id="p-cliente" required></select></div>
+            <div class="field"><label for="p-mano">Mano de obra $</label><input id="p-mano" type="number" min="0" step="0.01" value="0"></div>
+          </div>
+          <div class="toolbar-row">
+            <div class="field"><label for="p-sku">Repuesto</label><select id="p-sku"></select></div>
+            <div class="field"><label for="p-cant">Cant.</label><input id="p-cant" type="number" min="1" value="1"></div>
+            <button class="btn ghost small" id="btn-add-item" type="button">+ Agregar repuesto</button>
+          </div>
+          <div class="table-wrap"><table id="t-pres-items">
+            <tr><th>SKU</th><th class="num">Cant</th><th class="num">P. unit</th><th class="num">Subtotal</th><th></th></tr>
+          </table></div>
+          <p class="hint" id="p-total">Total: $0,00</p>
+          <div class="toolbar-row">
+            <button class="btn small" type="submit">Guardar presupuesto</button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Presupuestos</h2>
+        <div class="table-wrap"><table id="t-pres">
+          <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Ítems</th><th class="num">Total</th><th>Estado</th><th></th></tr>
+        </table></div>
+        <div class="toolbar-row">
+          <button class="btn ghost small" id="btn-csv-pres" type="button">Descargar presupuestos.csv</button>
+        </div>
+        <p class="hint">Aceptar descuenta el stock. Estados: pendiente → en taller → listo → entregada.</p>
+      </div>
+    </section>
   </div></main>
   <footer>Panel interno · los cambios se publican reemplazando el CSV en el repo.</footer>
 </div>
@@ -213,6 +276,9 @@ const USUARIOS = { julio: "1234", matias: "1234" };
 const SOCIOS = Object.keys(USUARIOS);
 const STOCK_COLS = ["sku","nombre","marca","auto_compatible","tipo","precio_costo","precio_venta","stock","stock_minimo","foto","publicado","texto_auto"];
 const VENTAS_COLS = ["fecha","sku","cantidad","monto","canal","vendedor","estado","comision_pct","comision_monto","comprobante"];
+const CLIENTES_COLS = ["nombre","telefono","patente","auto","notas"];
+const PRES_COLS = ["id","fecha","cliente","items","mano_obra","total","estado"];
+const ESTADOS_PRES = ["pendiente","en_taller","listo","entregada"];
 const $ = (id) => document.getElementById(id);
 const fmt$ = (n) => "$" + Number(n || 0).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -246,7 +312,7 @@ function descargar(nombre, texto) {
 }
 
 /* Estado */
-let STOCK = [], STOCK_ORIG = [], VENTAS = [];
+let STOCK = [], STOCK_ORIG = [], VENTAS = [], CLIENTES = [], PRES = [], PRES_ITEMS = [];
 const num = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
 const quiebre = (r) => num(r.stock) <= 0 ? "out" : num(r.stock) <= num(r.stock_minimo || 1) ? "low" : "ok";
 
@@ -274,21 +340,33 @@ if (sessionStorage.getItem("crm_admin") && USUARIOS[sessionStorage.getItem("crm_
 document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
   document.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-selected", "false"));
   b.setAttribute("aria-selected", "true");
-  for (const s of ["resumen", "stock", "ventas", "comisiones"]) $("tab-" + s).hidden = s !== b.dataset.tab;
+  for (const s of ["resumen", "stock", "ventas", "comisiones", "clientes", "presup"]) $("tab-" + s).hidden = s !== b.dataset.tab;
 }));
 
 /* Carga */
+/* Carga tolerante: si un CSV no existe aún, arranca vacío */
+async function cargarCSV(path) {
+  try {
+    const r = await fetch(path, { cache: "no-store" });
+    if (!r.ok) return [];
+    return parseCSV(await r.text());
+  } catch { return []; }
+}
 async function cargar() {
-  const [st, vt] = await Promise.all([
-    fetch("data/stock.csv", { cache: "no-store" }).then((r) => r.text()),
-    fetch("data/ventas.csv", { cache: "no-store" }).then((r) => r.text())
+  const [st, vt, ct, pt] = await Promise.all([
+    cargarCSV("data/stock.csv"), cargarCSV("data/ventas.csv"),
+    cargarCSV("data/clientes.csv"), cargarCSV("data/presupuestos.csv")
   ]);
-  STOCK = parseCSV(st).filter((r) => r.sku);
+  STOCK = st.filter((r) => r.sku);
   STOCK_ORIG = JSON.parse(JSON.stringify(STOCK));
-  VENTAS = parseCSV(vt).filter((r) => r.sku);
+  VENTAS = vt.filter((r) => r.sku);
+  CLIENTES = ct.filter((r) => r.telefono || r.nombre);
+  PRES = pt.filter((r) => r.id);
   $("v-fecha").value = new Date().toISOString().slice(0, 10);
-  const sel = $("v-sku");
-  sel.innerHTML = STOCK.map((r) => `<option value="${esc(r.sku)}">${esc(r.sku)} · ${esc(r.nombre)} ($${num(r.precio_venta).toLocaleString("es-AR")})</option>`).join("");
+  const opts = STOCK.map((r) => `<option value="${esc(r.sku)}">${esc(r.sku)} · ${esc(r.nombre)} ($${num(r.precio_venta).toLocaleString("es-AR")})</option>`).join("");
+  $("v-sku").innerHTML = opts;
+  $("p-sku").innerHTML = opts;
+  $("p-cliente").innerHTML = CLIENTES.map((c) => `<option value="${esc(c.telefono)}">${esc(c.nombre)} · ${esc(c.telefono)}</option>`).join("");
   recalcMonto();
   renderTodo();
 }
@@ -360,7 +438,93 @@ function renderComisiones() {
     (Object.entries(pen).map(([k, d]) => `<tr><td>${esc(k)}</td><td class="num">${d.n}</td><td class="num">${fmt$(d.m)}</td></tr>`).join("") || '<tr><td colspan="3">Sin pendientes 🎉</td></tr>');
 }
 
-function renderTodo() { renderResumen(); renderStock(); renderVentas(); renderComisiones(); }
+/* Clientes */
+$("cliente-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const tel = $("c-tel").value.trim();
+  if (CLIENTES.some((c) => c.telefono === tel)) { alert("Ya existe un cliente con ese teléfono."); return; }
+  CLIENTES.push({ nombre: $("c-nombre").value.trim(), telefono: tel, patente: $("c-patente").value.trim(), auto: $("c-auto").value.trim(), notas: $("c-notas").value.trim() });
+  $("p-cliente").innerHTML = CLIENTES.map((c) => `<option value="${esc(c.telefono)}">${esc(c.nombre)} · ${esc(c.telefono)}</option>`).join("");
+  e.target.reset();
+  renderClientes();
+});
+$("btn-csv-clientes").addEventListener("click", () => descargar("clientes.csv", toCSV(CLIENTES_COLS, CLIENTES)));
+function renderClientes() {
+  $("t-clientes").innerHTML = "<tr><th>Nombre</th><th>Teléfono</th><th>Patente</th><th>Auto</th><th class=\"num\">Presup.</th></tr>" +
+    (CLIENTES.map((c) => {
+      const n = PRES.filter((p) => p.cliente === c.telefono).length;
+      return `<tr><td>${esc(c.nombre)}</td><td>${esc(c.telefono)}</td><td>${esc(c.patente)}</td><td>${esc(c.auto)}${c.notas ? `<br><small style="color:var(--mut)">${esc(c.notas)}</small>` : ""}</td><td class="num">${n}</td></tr>`;
+    }).join("") || '<tr><td colspan="5">Sin clientes todavía. Cargá el primero arriba.</td></tr>');
+}
+
+/* Presupuestos — ítems "SKU xN @precio" unidos con " | " */
+function parseItems(s) {
+  return String(s || "").split(" | ").map((x) => x.trim()).filter(Boolean).map((x) => {
+    const m = x.match(/^(.+)\s+x(\d+)\s+@([\d.]+)$/);
+    return m ? { sku: m[1], cant: +m[2], precio: +m[3] } : null;
+  }).filter(Boolean);
+}
+const itemsTexto = (items) => items.map((it) => `${it.sku} x${it.cant} @${it.precio}`).join(" | ");
+function totalPres(mano, items) {
+  return num(mano) + items.reduce((a, it) => a + it.precio * it.cant, 0);
+}
+function renderPresItems() {
+  $("t-pres-items").innerHTML = "<tr><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">P. unit</th><th class=\"num\">Subtotal</th><th></th></tr>" +
+    PRES_ITEMS.map((it, i) => `<tr><td>${esc(it.sku)}</td><td class="num">${it.cant}</td><td class="num">${fmt$(it.precio)}</td><td class="num">${fmt$(it.precio * it.cant)}</td><td><button class="btn ghost small" data-quitar="${i}" type="button">×</button></td></tr>`).join("");
+  $("p-total").textContent = "Total: " + fmt$(totalPres($("p-mano").value, PRES_ITEMS));
+}
+$("btn-add-item").addEventListener("click", () => {
+  const sku = $("p-sku").value; if (!sku) return;
+  const r = STOCK.find((x) => x.sku === sku);
+  const cant = Math.max(1, +$("p-cant").value || 1);
+  const ya = PRES_ITEMS.find((it) => it.sku === sku);
+  if (ya) ya.cant = Math.min(ya.cant + cant, num(r.stock));
+  else PRES_ITEMS.push({ sku, cant: Math.min(cant, num(r.stock)), precio: num(r.precio_venta) });
+  renderPresItems();
+});
+$("t-pres-items").addEventListener("click", (e) => {
+  const i = e.target.dataset.quitar; if (i === undefined) return;
+  PRES_ITEMS.splice(+i, 1); renderPresItems();
+});
+$("p-mano").addEventListener("input", renderPresItems);
+$("pres-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!PRES_ITEMS.length) { alert("Agregá al menos un repuesto."); return; }
+  const id = "P-" + String(PRES.length + 1).padStart(3, "0");
+  PRES.push({ id, fecha: new Date().toISOString().slice(0, 10), cliente: $("p-cliente").value, items: itemsTexto(PRES_ITEMS), mano_obra: String(num($("p-mano").value)), total: totalPres($("p-mano").value, PRES_ITEMS).toFixed(2), estado: "pendiente" });
+  PRES_ITEMS = []; $("p-mano").value = 0;
+  renderPresItems(); renderPresupuestos(); renderClientes();
+});
+$("t-pres").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-id]"); if (!b) return;
+  const p = PRES.find((x) => x.id === b.dataset.id); if (!p) return;
+  const op = b.dataset.op;
+  if (op === "aceptar" && p.estado === "pendiente") {
+    for (const it of parseItems(p.items)) {
+      const r = STOCK.find((x) => x.sku === it.sku);
+      if (r) r.stock = String(Math.max(0, num(r.stock) - it.cant));
+    }
+    p.estado = "en_taller";
+  } else if (op === "avanzar") {
+    const i = ESTADOS_PRES.indexOf(p.estado);
+    if (i >= 0 && i < ESTADOS_PRES.length - 1) p.estado = ESTADOS_PRES[i + 1];
+  }
+  renderPresupuestos(); renderStock(); renderResumen();
+});
+$("btn-csv-pres").addEventListener("click", () => descargar("presupuestos.csv", toCSV(PRES_COLS, PRES)));
+function renderPresupuestos() {
+  $("t-pres").innerHTML = "<tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Ítems</th><th class=\"num\">Total</th><th>Estado</th><th></th></tr>" +
+    ([...PRES].reverse().map((p) => {
+      const cli = CLIENTES.find((c) => c.telefono === p.cliente);
+      const acc = p.estado === "pendiente"
+        ? `<button class="btn small" data-op="aceptar" data-id="${esc(p.id)}" type="button">Aceptar</button>`
+        : p.estado === "entregada" ? pill("ENTREGADA", "ok")
+        : `<button class="btn ghost small" data-op="avanzar" data-id="${esc(p.id)}" type="button">Avanzar → ${ESTADOS_PRES[ESTADOS_PRES.indexOf(p.estado) + 1].replace("_", " ")}</button>`;
+      return `<tr><td>${esc(p.id)}</td><td>${esc(p.fecha)}</td><td>${esc(cli ? cli.nombre : p.cliente)}</td><td><small>${esc(p.items)}</small></td><td class="num">${fmt$(p.total)}</td><td>${pill(p.estado.toUpperCase().replace("_", " "), p.estado === "pendiente" ? "low" : p.estado === "entregada" ? "ok" : "info")}</td><td>${acc}</td></tr>`;
+    }).join("") || '<tr><td colspan="7">Sin presupuestos todavía.</td></tr>');
+}
+
+function renderTodo() { renderResumen(); renderStock(); renderVentas(); renderComisiones(); renderClientes(); renderPresupuestos(); renderPresItems(); }
 </script>
 </body>
 </html>

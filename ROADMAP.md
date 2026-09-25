@@ -31,11 +31,12 @@
 - [ ] Posteo asistido (descargar y subir) → luego API Meta / n8n / Buffer
 - [ ] Todo link con `?v=` para no perder atribución
 
-## Fase 5 — CRM ligero taller + repuestos
-- [ ] Ficha cliente: nombre, patente, auto, tel, historial
-- [ ] Presupuesto: mano_obra + repuestos (descuenta stock al aceptar)
-- [ ] Estados: pendiente > en_taller > listo > entregado + recordatorio WA
-- [ ] Migrar a Supabase/Firebase solo cuando Sheet duela (>1000 SKUs)
+## Fase 5 — CRM ligero taller + repuestos (base lista, a probar)
+- [x] Panel: pestañas Clientes + Presupuestos (`docs/data/clientes.csv`, `presupuestos.csv`)
+- [x] Presupuesto: ítems + mano de obra, total vivo, estados pendiente > en taller > listo > entregada
+- [x] Aceptar descuenta stock (una sola vez, al pasar a en taller)
+- [ ] Probar circuito completo con un caso real (cliente + presupuesto + aceptar + venta)
+- [ ] Migrar a Supabase/Firebase solo cuando Sheet/CSV duela (>1000 SKUs)
 
 ## Fase 6 — Pulido / escala
 - [ ] Dominio propio + Instagram Shopping / MercadoLibre espejo
