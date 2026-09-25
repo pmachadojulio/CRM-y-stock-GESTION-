@@ -24,6 +24,10 @@ Estamos haciendo un sistema propio, simple y barato (costo $0) que permita:
 - Sin `?v` en el link → el WhatsApp va a Matías por defecto y el asesor figura como `local`.
 - Cupones de respaldo: `JULIO10` / `MATIAS10`.
 
+**Taller asociado (instalación + chapa y pintura):** Taller Trucco S.R.L. — Maipú 631,
+Villa María, Tel. 0353 452-6939. Empresa familiar, homologado CESVI, trabaja con
+aseguradoras. Los repuestos vendidos se colocan ahí.
+
 ## 3. Links
 
 - Repo: `https://github.com/pmachadojulio/repuestero`
