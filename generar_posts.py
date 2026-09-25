@@ -30,7 +30,7 @@ def caption(r, vendedor):
         f"💰 {precio_txt} — stock: {r['stock']} u.\n"
         f"{(r['texto_auto'] or '').strip()}\n"
         f"📲 Pedilo acá: {link}\n"
-        f"#{ (r['marca'] or 'repuestos').replace(' ', '')} #ChapaYPintura #Repuestos"
+        f"#Repuestero #ChapaYPintura"
     )
 
 
