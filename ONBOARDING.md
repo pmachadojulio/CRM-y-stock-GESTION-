@@ -43,16 +43,15 @@ aseguradoras. Los repuestos vendidos se colocan ahí.
 ## 5. Estructura actual del repo
 
 ```
-docs/index.html          # catálogo público (buscador, filtros, WhatsApp con atribución)
-docs/admin.html          # panel interno: comisiones + pendientes + quiebres (noindex)
-docs/data/stock.csv      # 20 repuestos ejemplo. Columnas: sku,nombre,marca,auto_compatible,
-                         # tipo,precio_costo,precio_venta,stock,stock_minimo,foto,publicado,texto_auto
-docs/data/ventas.csv     # una venta demo. Columnas: fecha,sku,cantidad,monto,canal,
-                         # vendedor,estado,comision_pct,comision_monto,comprobante
-reporte_comisiones.py    # CLI: python reporte_comisiones.py (regla v1, ver punto 7)
-scripts/sync_sheet.py    # esqueleto Fase 2: Sheet -> stock.csv (inactivo hasta tener Sheet)
-.github/workflows/sync-stock.yml  # workflow manual/diario para el sync (requiere secret)
-README.md / ROADMAP.md   # docs generales y checklist de fases
+docs/index.html          # catálogo público con pedido multi-item por WhatsApp
+docs/admin.html          # panel interno: Resumen, Stock, Ventas, Comisiones, Clientes, Presupuestos
+docs/data/stock.csv      # fuente de verdad del stock (columnas fijas, no renombrar)
+docs/data/ventas.csv     # ventas (nueva col cliente_tel) · clientes.csv · presupuestos.csv
+docs/productos.html      # snapshot SEO (generado: python generar_snapshot.py)
+reporte_comisiones.py    # CLI comisiones · reporte_mensual.py → reportes/YYYY-MM.md (cierre)
+validar_stock.py         # valida el CSV · generar_posts.py (textos) + scripts/generar_imagenes.py (placas+OG)
+scripts/sync_sheet.py    # esqueleto Fase 2 (inactivo hasta tener Sheet)
+.github/workflows/      # ci.yml (valida todo en push) + sync-stock.yml (requiere secret)
 ```
 
 ## 6. Reglas de trabajo (obligatorias)
@@ -77,14 +76,15 @@ README.md / ROADMAP.md   # docs generales y checklist de fases
 
 ## 8. Roadmap (estado al 25/09/2026)
 
-- [x] Fase 0: repo + Pages viva + atribución por vendedor.
-- [x] Fase 3 (base): reporte CLI + admin.html.
-- [x] Fase 2 (esqueleto): sync Sheet listo para activar.
-- [ ] Fase 1: reemplazar los 20 repuestos ejemplo por **repuestos reales** (foto, precio, compatibilidad).
-- [ ] Fase 2: pasar stock a Google Sheet compartido y activar sync.
-- [ ] Fase 4: generador de posts para redes con link `?v=`.
-- [ ] Fase 5: mini-CRM taller (clientes, presupuestos, estados).
-- [ ] Fase 6: dominio propio, MercadoPago, MercadoLibre/IG Shopping, métricas.
+- [x] Fase 0: repo `repuestero` + Pages viva + atribución (`?v=`, default Matías).
+- [x] Fase 1: catálogo antibobos con pedido + validación + SEO (robots, sitemap, JSON-LD, snapshot).
+- [x] Fase 3: comisiones (reporte CLI + cierre mensual en `reportes/`) + admin con avisos WhatsApp 1-clic.
+- [x] Fase 2 (esqueleto): sync Sheet listo; activar cuando exista el Sheet + secret.
+- [x] Fase 4 (base): captions + placas 1080 + OG. Falta: publicación automática (requiere Meta API).
+- [x] Fase 5 (base en panel): clientes + presupuestos con estados y descuento de stock.
+- [ ] Cargar repuestos y fotos REALES (hoy hay 20 de ejemplo).
+- [ ] Google Business Profile + Search Console (lo más potente para búsquedas locales).
+- [ ] Fase 6: dominio propio, MercadoPago, métricas.
 
 ## 9. Primeras tareas sugeridas para Matías
 
