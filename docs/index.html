@@ -46,7 +46,7 @@ footer a{color:var(--acc)}
 <div class="brand">
 <h1>TALLER <span>CHAPA &amp; PINTURA</span> · REPUESTOS</h1>
 <p>Repuestos de todo tipo + colocación y pintura en taller. Precios en ARS.</p>
-<div class="badge" id="asesor">Asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / SOCIO10</div>
+<div class="badge" id="asesor">Asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / MATIAS10</div>
 </div>
 </div></header>
 
@@ -60,24 +60,27 @@ footer a{color:var(--acc)}
 <div class="grid" id="grid"></div>
 
 <footer>
-Pedidos por WhatsApp · Instalación en taller disponible · Precios sujetos a stock ·
+Pedidos por WhatsApp · <a id="wa-julio" href="https://wa.me/5493534018769">Julio</a> · <a id="wa-matias" href="https://wa.me/5493534128663">Matías</a> · Instalación en taller · Precios sujetos a stock ·
 <a href="data/stock.csv">ver stock.csv</a> · Hecho con GitHub Pages $0
 </footer>
 
 <script>
 const CONFIG = {
-  whatsapp: "5493510000000", // <-- CAMBIAR por el número real sin + ni espacios
-  vendedores: ["julio", "socio"], // <-- cambiar "socio" por el nombre del amigo
+  numeros: { julio: "5493534018769", matias: "5493534128663" },
+  porDefecto: "julio",
   moneda: (n) => "$" + Number(n||0).toLocaleString("es-AR")
 };
-// --- atribución first-touch ?v= ---
+const vendedoresValidos = Object.keys(CONFIG.numeros);
+// --- atribución first-touch ?v=julio|matias ---
 (function(){
-  const p = new URLSearchParams(location.search).get("v");
-  if (p) localStorage.setItem("crm_vendedor", p.toLowerCase().trim());
+  const p = (new URLSearchParams(location.search).get("v")||"").toLowerCase().trim();
+  if (p && vendedoresValidos.includes(p)) localStorage.setItem("crm_vendedor", p);
+  else if (p && p !== "") localStorage.setItem("crm_vendedor", "local");
   const v = localStorage.getItem("crm_vendedor") || "local";
   document.getElementById("asesor-nombre").textContent = v;
 })();
 const vendedor = () => localStorage.getItem("crm_vendedor") || "local";
+const numeroPara = (v) => CONFIG.numeros[v] || CONFIG.numeros[CONFIG.porDefecto];
 
 function parseCSV(t){
   const lines = t.trim().split(/\r?\n/), h = lines[0].split(",");
@@ -118,7 +121,7 @@ function render(){
       : i.stock<=i.stock_minimo ? `<span class="stock low">¡Últimas ${i.stock} unidades!</span>`
       : `<span class="stock ok">En stock (${i.stock})</span>`;
     const msg = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
-    const wa = `https://wa.me/${CONFIG.whatsapp}?text=${msg}`;
+    const wa = `https://wa.me/${numeroPara(v)}?text=${msg}`;
     const dis = i.stock<=0 ? "dis" : "";
     return `<div class="card"><div class="img">🔧</div><div class="body">
       <div class="sku">${i.sku} · ${i.tipo||""} · ${i.marca||""}</div>

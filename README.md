@@ -37,15 +37,15 @@ git add -A; git commit -m "feat: mi cambio"; git push -u origin feat/mi-cambio
 
 ## Comisiones (regla inicial v1)
 
-- Link con atribución: `?v=julio` o `?v=socio` (se guarda en el navegador + va en el WhatsApp).
-- Respaldo manual: cupón `JULIO10` / `SOCIO10`.
+- Links: `?v=julio` → WhatsApp Julio (5493534018769) · `?v=matias` → WhatsApp Matías (5493534128663). Sin `?v` → Julio por defecto, asesor muestra `local`.
+- El `?v=` se guarda en el navegador (first-touch) + va en el mensaje de WhatsApp.
+- Respaldo manual: cupón `JULIO10` / `MATIAS10`.
 - Venta local sin atribución: 50/50. Venta con `?v=` o cupón: 100% al vendedor.
 - `ventas.csv` manda. Reporte semanal a ojo hasta automatizar (Fase 3).
 
 ## Configurar (2 min)
 
-1. En `docs/index.html` → `CONFIG.whatsapp`: poner el número real (`549...`, sin `+`).
-2. En `CONFIG.vendedores`: cambiar `socio` por el nombre del amigo.
-3. Cargar 20 repuestos reales en `docs/data/stock.csv` y pushear. La web se actualiza sola.
+1. ✅ Números ya cableados en `docs/index.html` → `CONFIG.numeros`.
+2. Cargar 20 repuestos reales en `docs/data/stock.csv` y pushear. La web se actualiza sola.
 
 Ver `ROADMAP.md` para el paso a paso completo.
