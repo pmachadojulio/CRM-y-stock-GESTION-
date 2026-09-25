@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repuestos | Taller Chapa y Pintura</title>
-<meta name="description" content="Repuestos de todo tipo + taller de chapa y pintura. Consultá por WhatsApp con tu asesor.">
+<meta name="description" content="Elegí tus repuestos, armá tu pedido y envialo por WhatsApp. Colocación y pintura en taller.">
 <meta name="theme-color" content="#ffffff">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Repuestos | Taller Chapa y Pintura">
-<meta property="og:description" content="Repuestos de todo tipo + colocación y pintura en taller. Pedí por WhatsApp.">
+<meta property="og:description" content="Armá tu pedido y envialo por WhatsApp. Stock real, colocación en taller.">
 <meta name="twitter:card" content="summary">
 <style>
 :root{
@@ -21,54 +21,102 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   background:var(--bg);color:var(--txt);line-height:1.5;min-height:100vh;
-  -webkit-font-smoothing:antialiased}
+  -webkit-font-smoothing:antialiased;padding-bottom:90px}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
 .wrap{max-width:1120px;margin:0 auto;padding:0 var(--s4)}
-header{background:var(--surface);border-bottom:1px solid var(--line);
-  padding:var(--s4) 0;position:sticky;top:0;z-index:10}
-.brand h1{font-size:1.15rem;font-weight:800;letter-spacing:.01em}
+header{background:var(--surface);border-bottom:1px solid var(--line);padding:var(--s4) 0}
+.brand h1{font-size:1.15rem;font-weight:800}
 .brand h1 span{color:var(--acc)}
 .brand p{color:var(--mut);font-size:.9rem;margin-top:2px;max-width:62ch}
 .asesor{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s3);
   background:var(--acc-soft);border:1px solid #f2c9ab;color:#7c2d12;
   font-size:.8rem;padding:6px var(--s3);border-radius:999px}
 .asesor b{color:var(--acc);text-transform:capitalize}
-.toolbar{display:grid;grid-template-columns:1fr;gap:var(--s3);margin:var(--s4) auto;max-width:1120px;padding:0 var(--s4)}
+/* Pasos */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2);margin:var(--s4) auto;max-width:1120px;padding:0 var(--s4)}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:var(--s3);text-align:center;font-size:.8rem;color:var(--mut)}
+.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;margin:0 auto var(--s1);
+  background:var(--acc);color:#fff;border-radius:50%;font-size:.82rem}
+/* Toolbar */
+.toolbar{display:grid;grid-template-columns:1fr;gap:var(--s3);margin:0 auto var(--s3);max-width:1120px;padding:0 var(--s4)}
 @media(min-width:760px){.toolbar{grid-template-columns:2fr 1fr 1fr auto;align-items:end}}
 .field{display:flex;flex-direction:column;gap:var(--s1)}
 .field label{font-size:.75rem;font-weight:600;color:var(--mut)}
-input[type="search"],select{background:var(--surface);border:1px solid var(--line);color:var(--txt);
+input[type="search"],input[type="text"],select{background:var(--surface);border:1px solid var(--line);color:var(--txt);
   border-radius:10px;padding:11px var(--s3);font-size:.95rem;width:100%}
 .check{display:flex;align-items:center;gap:var(--s2);font-size:.85rem;color:var(--mut);padding-bottom:10px}
 .check input{width:18px;height:18px;accent-color:var(--acc)}
+.chips{display:flex;gap:var(--s2);flex-wrap:wrap;max-width:1120px;margin:0 auto var(--s3);padding:0 var(--s4)}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--txt);font-size:.82rem;font-weight:600;
+  padding:8px var(--s4);border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
 .count{color:var(--mut);font-size:.85rem;max-width:1120px;margin:0 auto var(--s3);padding:0 var(--s4)}
-.grid{display:grid;grid-template-columns:1fr;gap:var(--s4);max-width:1120px;margin:0 auto;padding:0 var(--s4) var(--s6)}
+/* Cards */
+.grid{display:grid;grid-template-columns:1fr;gap:var(--s4);max-width:1120px;margin:0 auto;padding:0 var(--s4) var(--s5)}
 @media(min-width:620px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,box-shadow .15s ease}
-.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(24,34,48,.08)}
-.thumb{background:var(--surface-2);min-height:120px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;display:flex;flex-direction:column}
+.thumb{background:var(--surface-2);min-height:110px;display:flex;align-items:center;justify-content:center;
   font-size:2.2rem;border-bottom:1px solid var(--line)}
 .card-body{padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);flex:1}
 .eyebrow{font-size:.7rem;font-weight:700;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
 .card h2{font-size:1rem;font-weight:700;line-height:1.35}
 .compat{font-size:.82rem;color:var(--mut)}
 .desc{font-size:.85rem;color:#33415a}
-.price{font-size:1.3rem;font-weight:800;margin-top:var(--s1)}
-.avail{display:inline-block;font-size:.76rem;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content}
+.price-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s2);margin-top:var(--s1)}
+.price{font-size:1.3rem;font-weight:800}
+.avail{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content}
 .avail.ok{background:var(--ok-soft);color:var(--ok)}
 .avail.low{background:var(--warn-soft);color:var(--warn)}
 .avail.out{background:var(--bad-soft);color:var(--bad)}
-.btn{display:block;text-align:center;background:var(--wa);color:#fff;font-weight:700;
-  text-decoration:none;padding:var(--s3);border-radius:10px;margin-top:auto}
-.btn:hover{filter:brightness(1.06)}
-.btn[aria-disabled="true"]{background:var(--surface-2);color:var(--mut);pointer-events:none}
+.addrow{display:flex;gap:var(--s2);margin-top:auto}
+.btn-add{flex:1;border:0;cursor:pointer;background:var(--acc);color:#fff;font-weight:700;
+  padding:var(--s3);border-radius:10px;font-size:.92rem}
+.btn-add:hover{filter:brightness(1.08)}
+.btn-add:disabled{background:var(--surface-2);color:var(--mut);cursor:not-allowed}
+.stepper{flex:1;display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stepper button{border:0;background:var(--surface-2);font-size:1.1rem;font-weight:800;
+  width:46px;padding:10px 0;cursor:pointer;color:var(--txt)}
+.stepper b{font-size:.95rem}
+.link-wa{background:none;border:0;color:var(--acc);font-size:.8rem;font-weight:600;cursor:pointer;
+  text-decoration:underline;padding:var(--s1) 0;width:fit-content}
 .empty{color:var(--mut);grid-column:1/-1;text-align:center;padding:var(--s6) 0}
-footer{border-top:1px solid var(--line);background:var(--surface);padding:var(--s5) var(--s4);
+/* Barra pedido */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding:var(--s3) var(--s4);z-index:20}
+.bar .wrap{display:flex;align-items:center;gap:var(--s3)}
+.bar-info{flex:1;font-size:.85rem}
+.bar-info b{font-size:1rem}
+.btn-pedido{border:0;cursor:pointer;background:var(--wa);color:#fff;font-weight:800;
+  padding:13px var(--s5);border-radius:12px;font-size:.95rem}
+.btn-pedido:disabled{background:var(--surface-2);color:var(--mut);cursor:not-allowed}
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(24,34,48,.45);z-index:30}
+.drawer{position:fixed;left:0;right:0;bottom:0;z-index:31;background:var(--surface);
+  border-radius:16px 16px 0 0;max-height:88vh;display:flex;flex-direction:column;
+  max-width:640px;margin:0 auto}
+.drawer header{background:none;border:0;position:static;padding:var(--s4)}
+.drawer h2{font-size:1.05rem}
+.drawer-body{overflow-y:auto;padding:0 var(--s4);flex:1}
+.line{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.line-info{flex:1}.line-info b{font-size:.88rem;display:block}.line-info small{color:var(--mut)}
+.qty{display:flex;align-items:center;gap:var(--s2)}
+.qty button{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;
+  width:32px;height:32px;font-size:1rem;font-weight:800;cursor:pointer}
+.qty b{min-width:24px;text-align:center}
+.line-total{font-weight:800;font-size:.88rem;min-width:76px;text-align:right}
+.drawer footer{background:none;border-top:1px solid var(--line);padding:var(--s4);text-align:left}
+.total-row{display:flex;justify-content:space-between;font-size:1.05rem;font-weight:800;margin-bottom:var(--s3)}
+.drawer footer .btn-pedido{width:100%}
+.btn-clear{background:none;border:0;color:var(--bad);font-size:.82rem;cursor:pointer;
+  text-decoration:underline;margin-top:var(--s2)}
+footer.page{border-top:1px solid var(--line);background:var(--surface);padding:var(--s5) var(--s4);
   color:var(--mut);font-size:.82rem;text-align:center}
-footer nav{display:flex;gap:var(--s4);justify-content:center;flex-wrap:wrap;margin-bottom:var(--s2)}
-footer a{color:var(--acc)}
+footer.page nav{display:flex;gap:var(--s4);justify-content:center;flex-wrap:wrap;margin-bottom:var(--s2)}
+footer.page a{color:var(--acc)}
 </style>
 </head>
 <body>
@@ -76,35 +124,46 @@ footer a{color:var(--acc)}
   <div class="wrap">
     <div class="brand">
       <h1>TALLER <span>CHAPA &amp; PINTURA</span> · REPUESTOS</h1>
-      <p>Repuestos de todo tipo + colocación y pintura en taller. Precios en ARS, sujetos a stock.</p>
+      <p>Elegí lo que necesitás, armá tu pedido y envialo por WhatsApp. Te confirmamos stock y te lo instalamos en el taller.</p>
       <p class="asesor" role="status">Tu asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / MATIAS10</p>
     </div>
   </div>
 </header>
 
 <main>
+  <div class="steps" aria-label="Cómo comprar">
+    <div class="step"><b>1</b>Buscá tu repuesto</div>
+    <div class="step"><b>2</b>Agregalo al pedido</div>
+    <div class="step"><b>3</b>Enviá por WhatsApp</div>
+  </div>
+
   <div class="toolbar wrap" role="search" aria-label="Buscar repuestos">
     <div class="field">
       <label for="q">Buscar</label>
       <input id="q" type="search" placeholder="Ej.: paragolpe Gol, pastillas, batería…" autocomplete="off">
     </div>
     <div class="field">
-      <label for="f-tipo">Rubro</label>
-      <select id="f-tipo"><option value="">Todos</option></select>
-    </div>
-    <div class="field">
       <label for="f-marca">Marca</label>
       <select id="f-marca"><option value="">Todas</option></select>
+    </div>
+    <div class="field">
+      <label for="f-orden">Ordenar</label>
+      <select id="f-orden">
+        <option value="rel">Relevancia</option>
+        <option value="asc">Menor precio</option>
+        <option value="desc">Mayor precio</option>
+      </select>
     </div>
     <label class="check"><input type="checkbox" id="f-stock" checked> Solo con stock</label>
   </div>
 
+  <div class="chips" id="chips" role="group" aria-label="Filtrar por rubro"></div>
   <p class="count" id="count" aria-live="polite"></p>
   <div class="grid" id="grid"></div>
-  <noscript><p class="wrap" style="color:var(--warn)">Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
+  <noscript><p class="wrap">Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
 </main>
 
-<footer>
+<footer class="page">
   <nav aria-label="Contacto">
     <a href="https://wa.me/5493534018769">WhatsApp Julio</a>
     <a href="https://wa.me/5493534128663">WhatsApp Matías</a>
@@ -112,6 +171,30 @@ footer a{color:var(--acc)}
   </nav>
   <p>Instalación en taller disponible · Hecho con GitHub Pages</p>
 </footer>
+
+<!-- Barra + drawer del pedido -->
+<div class="bar"><div class="wrap">
+  <p class="bar-info" id="bar-info">Pedido vacío</p>
+  <button class="btn-pedido" id="btn-ver" disabled>Ver pedido</button>
+</div></div>
+<div id="pedido-ui" hidden>
+  <div class="scrim" id="scrim"></div>
+  <div class="drawer" role="dialog" aria-modal="true" aria-label="Tu pedido">
+    <header><div class="wrap"><h2>Tu pedido</h2></div></header>
+    <div class="drawer-body">
+      <div class="field" style="margin-bottom:var(--s3)">
+        <label for="cli-nombre">Tu nombre (opcional, para atenderte más rápido)</label>
+        <input id="cli-nombre" type="text" placeholder="Ej.: Juan, Gol Trend 2015" autocomplete="name">
+      </div>
+      <div id="lineas"></div>
+    </div>
+    <footer>
+      <div class="total-row"><span>Total</span><span id="total">$0</span></div>
+      <button class="btn-pedido" id="btn-enviar">Enviar pedido por WhatsApp</button>
+      <button class="btn-clear" id="btn-vaciar">Vaciar pedido</button>
+    </footer>
+  </div>
+</div>
 
 <script>
 "use strict";
@@ -121,17 +204,33 @@ const CONFIG = {
   moneda: (n) => "$" + Number(n || 0).toLocaleString("es-AR", { maximumFractionDigits: 0 })
 };
 const VENDEDORES = Object.keys(CONFIG.numeros);
-const ASESOR_EL = document.getElementById("asesor-nombre");
 
 // Atribución first-touch: ?v=julio|matias → se recuerda en el navegador
 (function initAsesor() {
   const p = (new URLSearchParams(location.search).get("v") || "").toLowerCase().trim();
   if (p) localStorage.setItem("crm_vendedor", VENDEDORES.includes(p) ? p : "local");
-  ASESOR_EL.textContent = localStorage.getItem("crm_vendedor") || "local";
+  document.getElementById("asesor-nombre").textContent = localStorage.getItem("crm_vendedor") || "local";
 })();
 const vendedor = () => localStorage.getItem("crm_vendedor") || "local";
 const numeroPara = (v) => CONFIG.numeros[v] || CONFIG.numeros[CONFIG.porDefecto];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* Pedido (persiste en el navegador) */
+let PEDIDO = {};
+try { PEDIDO = JSON.parse(localStorage.getItem("crm_pedido") || "{}"); } catch { PEDIDO = {}; }
+const guardarPedido = () => localStorage.setItem("crm_pedido", JSON.stringify(PEDIDO));
+const cantTotal = () => Object.values(PEDIDO).reduce((a, n) => a + n, 0);
+const porSku = (sku) => ITEMS.find((i) => i.sku === sku);
+const totalPedido = () => Object.entries(PEDIDO).reduce((a, [sku, n]) => {
+  const it = porSku(sku); return a + (it ? it.precio_venta * n : 0);
+}, 0);
+function setCant(sku, n) {
+  const it = porSku(sku); if (!it) return;
+  n = Math.max(0, Math.min(num(n), it.stock));
+  if (n <= 0) delete PEDIDO[sku]; else PEDIDO[sku] = n;
+  guardarPedido(); render(); renderBar(); renderDrawer();
+}
+const num = (v) => { const n = Number(v); return isNaN(n) ? 0 : n; };
 
 function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
@@ -140,14 +239,12 @@ function parseCSV(text) {
     const cols = l.split(",");
     const o = {};
     head.forEach((k, i) => { o[k.trim()] = (cols[i] || "").trim(); });
-    o.precio_venta = Number(o.precio_venta || 0);
-    o.stock = Number(o.stock || 0);
-    o.stock_minimo = Number(o.stock_minimo || 1);
+    o.precio_venta = num(o.precio_venta); o.stock = num(o.stock); o.stock_minimo = num(o.stock_minimo || 1);
     return o;
   });
 }
 
-let ITEMS = [];
+let ITEMS = [], RUBRO = "";
 async function load() {
   try {
     const res = await fetch("data/stock.csv", { cache: "no-store" });
@@ -158,33 +255,50 @@ async function load() {
       '<p class="empty">No se pudo cargar el stock. Revisá tu conexión e intentá de nuevo.</p>';
     return;
   }
+  // Limpia el pedido de SKUs que ya no existen o quedaron sin stock
+  for (const sku of Object.keys(PEDIDO)) {
+    const it = porSku(sku);
+    if (!it || it.stock <= 0) delete PEDIDO[sku];
+    else if (PEDIDO[sku] > it.stock) PEDIDO[sku] = it.stock;
+  }
+  guardarPedido();
   const tipos = [...new Set(ITEMS.map((i) => i.tipo).filter(Boolean))].sort();
   const marcas = [...new Set(ITEMS.map((i) => i.marca).filter(Boolean))].sort();
-  const ft = document.getElementById("f-tipo"), fm = document.getElementById("f-marca");
-  for (const t of tipos) ft.add(new Option(t, t));
+  const fm = document.getElementById("f-marca");
   for (const m of marcas) fm.add(new Option(m, m));
-  render();
+  const chips = document.getElementById("chips");
+  chips.innerHTML = ["", ...tipos].map((t) =>
+    `<button class="chip" data-t="${esc(t)}" aria-pressed="${t === ""}">${t === "" ? "Todo" : esc(t)}</button>`).join("");
+  chips.addEventListener("click", (e) => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    RUBRO = b.dataset.t;
+    chips.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
+    render();
+  });
+  render(); renderBar();
 }
 
 function disponibilidad(i) {
-  if (i.stock <= 0) return '<p class="avail out">Sin stock — consultanos reposición</p>';
-  if (i.stock <= i.stock_minimo) return `<p class="avail low">¡Últimas ${i.stock} unidades!</p>`;
-  return `<p class="avail ok">En stock (${i.stock})</p>`;
+  if (i.stock <= 0) return '<p><span class="avail out">Sin stock — consultanos reposición</span></p>';
+  if (i.stock <= i.stock_minimo) return `<p><span class="avail low">¡Últimas ${i.stock} unidades!</span></p>`;
+  return `<p><span class="avail ok">En stock (${i.stock})</span></p>`;
 }
 
 function render() {
   const q = document.getElementById("q").value.trim().toLowerCase();
-  const t = document.getElementById("f-tipo").value;
   const m = document.getElementById("f-marca").value;
+  const orden = document.getElementById("f-orden").value;
   const soloStock = document.getElementById("f-stock").checked;
   const v = vendedor();
-  const list = ITEMS.filter((i) => {
+  let list = ITEMS.filter((i) => {
     if (soloStock && i.stock <= 0) return false;
-    if (t && i.tipo !== t) return false;
+    if (RUBRO && i.tipo !== RUBRO) return false;
     if (m && i.marca !== m) return false;
     if (q && !`${i.nombre} ${i.sku} ${i.auto_compatible} ${i.marca}`.toLowerCase().includes(q)) return false;
     return true;
   });
+  if (orden === "asc") list = [...list].sort((a, b) => a.precio_venta - b.precio_venta);
+  if (orden === "desc") list = [...list].sort((a, b) => b.precio_venta - a.precio_venta);
   document.getElementById("count").textContent =
     `${list.length} producto${list.length === 1 ? "" : "s"}` + (v !== "local" ? ` · tu asesor: ${v}` : "");
   const grid = document.getElementById("grid");
@@ -193,10 +307,17 @@ function render() {
     return;
   }
   grid.innerHTML = list.map((i) => {
-    const msg = encodeURIComponent(
-      `Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
-    const wa = `https://wa.me/${numeroPara(v)}?text=${msg}`;
-    const sinStock = i.stock <= 0;
+    const enCarro = PEDIDO[i.sku] || 0;
+    const accion = i.stock <= 0
+      ? `<button class="btn-add" disabled>Sin stock</button>`
+      : enCarro > 0
+        ? `<div class="stepper" role="group" aria-label="Cantidad de ${esc(i.nombre)}">
+             <button data-act="menos" data-sku="${esc(i.sku)}" aria-label="Quitar uno">−</button>
+             <b>${enCarro} en pedido</b>
+             <button data-act="mas" data-sku="${esc(i.sku)}" aria-label="Agregar uno">+</button>
+           </div>`
+        : `<button class="btn-add" data-act="agregar" data-sku="${esc(i.sku)}">Agregar al pedido</button>`;
+    const msg1 = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
     return `<article class="card">
       <div class="thumb" aria-hidden="true">🔧</div>
       <div class="card-body">
@@ -204,17 +325,84 @@ function render() {
         <h2>${esc(i.nombre)}</h2>
         <p class="compat">Compatible: ${esc(i.auto_compatible) || "—"}</p>
         ${i.texto_auto ? `<p class="desc">${esc(i.texto_auto)}</p>` : ""}
-        <p class="price">${CONFIG.moneda(i.precio_venta)}</p>
+        <div class="price-row"><p class="price">${CONFIG.moneda(i.precio_venta)}</p></div>
         ${disponibilidad(i)}
-        <a class="btn" href="${wa}" target="_blank" rel="noopener"${sinStock ? ' aria-disabled="true"' : ""}>Consultar por WhatsApp</a>
+        <div class="addrow">${accion}</div>
+        ${i.stock > 0 ? `<button class="link-wa" data-act="solo" data-sku="${esc(i.sku)}">o consultar solo este por WhatsApp</button>` : ""}
       </div>
     </article>`;
   }).join("");
 }
 
-for (const id of ["q", "f-tipo", "f-marca", "f-stock"]) {
+document.getElementById("grid").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const { act, sku } = b.dataset;
+  if (act === "agregar") setCant(sku, (PEDIDO[sku] || 0) + 1);
+  if (act === "mas") setCant(sku, (PEDIDO[sku] || 0) + 1);
+  if (act === "menos") setCant(sku, (PEDIDO[sku] || 0) - 1);
+  if (act === "solo") {
+    const i = porSku(sku), v = vendedor();
+    const msg = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
+    window.open(`https://wa.me/${numeroPara(v)}?text=${msg}`, "_blank", "noopener");
+  }
+});
+for (const id of ["q", "f-marca", "f-orden", "f-stock"]) {
   document.getElementById(id).addEventListener("input", render);
 }
+
+/* Barra + drawer */
+function renderBar() {
+  const n = cantTotal(), btn = document.getElementById("btn-ver");
+  document.getElementById("bar-info").innerHTML = n === 0
+    ? "Pedido vacío — agregá productos con <b>Agregar al pedido</b>"
+    : `<b>${n} producto${n === 1 ? "" : "s"}</b> · ${CONFIG.moneda(totalPedido())}`;
+  btn.disabled = n === 0;
+}
+function abrirPedido() {
+  if (cantTotal() === 0) return;
+  renderDrawer();
+  document.getElementById("pedido-ui").hidden = false;
+}
+function cerrarPedido() { document.getElementById("pedido-ui").hidden = true; }
+document.getElementById("btn-ver").addEventListener("click", abrirPedido);
+document.getElementById("scrim").addEventListener("click", cerrarPedido);
+
+function renderDrawer() {
+  const box = document.getElementById("lineas");
+  const entries = Object.entries(PEDIDO);
+  box.innerHTML = entries.length ? entries.map(([sku, n]) => {
+    const i = porSku(sku); if (!i) return "";
+    return `<div class="line">
+      <div class="line-info"><b>${esc(i.nombre)}</b><small>${esc(sku)} · ${CONFIG.moneda(i.precio_venta)} c/u</small></div>
+      <div class="qty">
+        <button data-sku="${esc(sku)}" data-op="menos" aria-label="Quitar uno">−</button>
+        <b>${n}</b>
+        <button data-sku="${esc(sku)}" data-op="mas" aria-label="Agregar uno">+</button>
+      </div>
+      <p class="line-total">${CONFIG.moneda(i.precio_venta * n)}</p>
+    </div>`;
+  }).join("") : '<p class="empty">Tu pedido está vacío.</p>';
+  document.getElementById("total").textContent = CONFIG.moneda(totalPedido());
+}
+document.getElementById("lineas").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-op]"); if (!b) return;
+  setCant(b.dataset.sku, (PEDIDO[b.dataset.sku] || 0) + (b.dataset.op === "mas" ? 1 : -1));
+  if (cantTotal() === 0) cerrarPedido();
+});
+document.getElementById("btn-vaciar").addEventListener("click", () => {
+  PEDIDO = {}; guardarPedido(); render(); renderBar(); cerrarPedido();
+});
+document.getElementById("btn-enviar").addEventListener("click", () => {
+  const v = vendedor();
+  const nombre = document.getElementById("cli-nombre").value.trim();
+  const lineas = Object.entries(PEDIDO).map(([sku, n]) => {
+    const i = porSku(sku);
+    return `• ${i.sku} - ${i.nombre} x${n} (${CONFIG.moneda(i.precio_venta)} c/u) = ${CONFIG.moneda(i.precio_venta * n)}`;
+  });
+  const texto = `Hola${nombre ? ", soy " + nombre : ""}, quiero hacer un pedido (vendedor: ${v}):\n${lineas.join("\n")}\nTotal: ${CONFIG.moneda(totalPedido())}`;
+  window.open(`https://wa.me/${numeroPara(v)}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+});
+
 load();
 </script>
 </body>
