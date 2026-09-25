@@ -17,7 +17,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 CSV = BASE / "docs" / "data" / "stock.csv"
 OUT = BASE / "posts"
-WEB = "https://pmachadojulio.github.io/CRM-y-stock-GESTION-/"
+WEB = "https://pmachadojulio.github.io/repuestero/"
 
 
 def caption(r, vendedor):

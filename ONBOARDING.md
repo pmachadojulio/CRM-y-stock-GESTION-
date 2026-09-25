@@ -26,9 +26,9 @@ Estamos haciendo un sistema propio, simple y barato (costo $0) que permita:
 
 ## 3. Links
 
-- Repo: `https://github.com/pmachadojulio/CRM-y-stock-GESTION-`
-- Web pública: `https://pmachadojulio.github.io/CRM-y-stock-GESTION-/`
-- Panel interno: `https://pmachadojulio.github.io/CRM-y-stock-GESTION-/admin.html` (no indexar)
+- Repo: `https://github.com/pmachadojulio/repuestero`
+- Web pública: `https://pmachadojulio.github.io/repuestero/`
+- Panel interno: `https://pmachadojulio.github.io/repuestero/admin.html` (no indexar)
 
 ## 4. Stack (todo gratis)
 

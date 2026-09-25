@@ -1,10 +1,10 @@
-# CRM-y-stock-GESTION-
+# Repuestero
 
 Sistema simple para empresa automotriz (chapa y pintura) que ahora vende repuestos de todo tipo.
 
 **Objetivos:** revisar stock, vender, controlar comisiones (2 socios), publicar en la misma página + redes. Simple y estético para el público.
 
-**Demo viva (GitHub Pages):** `https://pmachadojulio.github.io/CRM-y-stock-GESTION-/`
+**Demo viva (GitHub Pages):** `https://pmachadojulio.github.io/repuestero/`
 > Se activa en `Settings > Pages > Deploy from branch > main > /docs`.
 
 ## Estructura
@@ -27,8 +27,8 @@ Sistema simple para empresa automotriz (chapa y pintura) que ahora vende repuest
 
 ```powershell
 # clonar (tu amigo)
-git clone https://github.com/pmachadojulio/CRM-y-stock-GESTION-.git
-cd CRM-y-stock-GESTION-
+git clone https://github.com/pmachadojulio/repuestero.git
+cd repuestero
 git checkout -b feat/mi-cambio
 # ... editar ...
 git add -A; git commit -m "feat: mi cambio"; git push -u origin feat/mi-cambio
