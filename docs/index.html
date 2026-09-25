@@ -8,6 +8,9 @@
 <meta name="theme-color" content="#ffffff">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Repuestero | Chapa y Pintura · Repuestos">
+<meta property="og:image" content="https://pmachadojulio.github.io/repuestero/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:description" content="Repuestero: armá tu pedido y envialo por WhatsApp. Stock real, colocación en taller.">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://pmachadojulio.github.io/repuestero/">
@@ -67,7 +70,8 @@ input[type="search"],input[type="text"],select{background:var(--surface);border:
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
   overflow:hidden;display:flex;flex-direction:column}
 .thumb{background:var(--surface-2);min-height:110px;display:flex;align-items:center;justify-content:center;
-  font-size:2.2rem;border-bottom:1px solid var(--line)}
+  font-size:2.2rem;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .card-body{padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);flex:1}
 .eyebrow{font-size:.7rem;font-weight:700;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
 .card h2{font-size:1rem;font-weight:700;line-height:1.35}
@@ -356,7 +360,7 @@ function render() {
         : `<button class="btn-add" data-act="agregar" data-sku="${esc(i.sku)}">Agregar al pedido</button>`;
     const msg1 = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
     return `<article class="card">
-      <div class="thumb" aria-hidden="true">🔧</div>
+      <div class="thumb" aria-hidden="true"><img src="assets/fotos/${esc(i.sku)}.jpg" alt="" loading="lazy" onerror="this.remove()">🔧</div>
       <div class="card-body">
         <p class="eyebrow">${esc(i.sku)} · ${esc(i.tipo)} · ${esc(i.marca)}</p>
         <h2>${esc(i.nombre)}</h2>
