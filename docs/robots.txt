@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /data/
+Sitemap: https://pmachadojulio.github.io/repuestero/sitemap.xml
