@@ -3,45 +3,364 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Comisiones y stock</title>
-<meta name="robots" content="noindex">
+<title>Panel · CRM Repuestos</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
 <style>
-body{font-family:system-ui,sans-serif;background:#111418;color:#f2f5f8;max-width:900px;margin:0 auto;padding:20px}
-h1{font-size:1.2rem}h2{font-size:1rem;margin-top:26px;color:#ff6b1a}
-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:8px}
-th,td{border:1px solid #2a3340;padding:8px;text-align:left}
-th{background:#1b2129}.num{text-align:right}
-.warn{color:#f59e0b;font-weight:700}.out{color:#f87171;font-weight:700}.ok{color:#22c55e}
-p{color:#9aa7b5;font-size:.85rem}
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --surface-2:#eef1f6; --line:#dde4ee;
+  --txt:#182230; --mut:#5d6c82; --acc:#9a3412; --acc-soft:#fff3ea;
+  --ok:#15803d; --ok-soft:#e9f7ef; --warn:#92400e; --warn-soft:#fef4e2;
+  --bad:#b91c1c; --bad-soft:#fdecec; --info:#1d4ed8; --info-soft:#e8effd;
+  --r:12px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:40px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);
+  color:var(--txt);line-height:1.5;min-height:100vh}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--s4)}
+[hidden]{display:none !important}
+/* Login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--s4)}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:var(--s5);width:100%;max-width:380px;box-shadow:0 12px 32px rgba(24,34,48,.08)}
+.login-card h1{font-size:1.2rem}
+.login-card p.sub{color:var(--mut);font-size:.85rem;margin:var(--s1) 0 var(--s4)}
+.field{display:flex;flex-direction:column;gap:var(--s1);margin-bottom:var(--s3)}
+.field label{font-size:.78rem;font-weight:600;color:var(--mut)}
+input,select{background:var(--surface);border:1px solid var(--line);color:var(--txt);
+  border-radius:10px;padding:10px var(--s3);font-size:.92rem;width:100%}
+.login-card input{background:var(--bg)}
+.btn{display:inline-block;border:0;cursor:pointer;background:var(--acc);color:#fff;font-weight:700;
+  padding:11px var(--s4);border-radius:10px;font-size:.92rem;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn.block{width:100%}
+.btn.ghost{background:var(--surface-2);color:var(--txt);border:1px solid var(--line)}
+.btn.small{padding:7px var(--s3);font-size:.82rem}
+.error{background:var(--bad-soft);color:var(--bad);font-size:.82rem;font-weight:600;
+  padding:var(--s2) var(--s3);border-radius:8px;margin-bottom:var(--s3)}
+.aviso{background:var(--warn-soft);color:var(--warn);font-size:.76rem;padding:var(--s2) var(--s3);
+  border-radius:8px;margin-top:var(--s4)}
+/* Topbar + tabs */
+.topbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.topbar .wrap{display:flex;align-items:center;gap:var(--s3);padding-top:var(--s3);padding-bottom:var(--s3);flex-wrap:wrap}
+.topbar h1{font-size:1.05rem;margin-right:auto}
+.user-pill{background:var(--surface-2);border:1px solid var(--line);font-size:.8rem;font-weight:700;
+  padding:5px var(--s3);border-radius:999px;text-transform:capitalize}
+.tabs{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:57px;z-index:9}
+.tabs .wrap{display:flex;gap:var(--s1);overflow-x:auto;padding-top:0;padding-bottom:0}
+.tab{border:0;background:none;color:var(--mut);font-weight:700;font-size:.88rem;cursor:pointer;
+  padding:var(--s3) var(--s4);border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--acc);border-bottom-color:var(--acc)}
+main .wrap{padding-top:var(--s5);padding-bottom:var(--s6)}
+h2{font-size:1.05rem;margin-bottom:var(--s3)}
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+@media(min-width:800px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4)}
+.kpi p{font-size:.76rem;color:var(--mut);font-weight:600}
+.kpi strong{font-size:1.35rem;display:block;margin-top:2px}
+.kpi small{color:var(--mut);font-size:.76rem}
+/* Tables */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:var(--s4)}
+.toolbar-row{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:end;margin-bottom:var(--s3)}
+.toolbar-row .field{margin-bottom:0;min-width:160px;flex:1}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:640px}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:middle}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);background:var(--bg)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.low{background:var(--warn-soft)}
+tr.out{background:var(--bad-soft)}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.low{background:var(--warn-soft);color:var(--warn)}
+.pill.out{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--info-soft);color:var(--info)}
+td input,td select{padding:6px 8px;font-size:.84rem}
+.hint{color:var(--mut);font-size:.8rem;margin-top:var(--s2)}
+footer{color:var(--mut);font-size:.78rem;text-align:center;padding:0 0 var(--s5)}
 </style>
 </head>
 <body>
-<h1>Admin — comisiones y quiebres (uso interno, no indexar)</h1>
-<p>Lee <code>data/ventas.csv</code> y <code>data/stock.csv</code> en vivo. Regla v1: julio/matías 100%, local 50/50. Solo cobrada/entregada suma comisión.</p>
-<h2>Comisiones</h2>
-<table id="t-com"><tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th><th class="num">Comisión</th></tr></table>
-<h2>Pendientes de cobro</h2>
-<table id="t-pen"><tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th></tr></table>
-<h2>Quiebres de stock</h2>
-<table id="t-stk"><tr><th>SKU</th><th>Nombre</th><th class="num">Stock</th><th class="num">Mín</th><th>Estado</th></tr></table>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-view">
+  <form class="login-card" id="login-form" autocomplete="off">
+    <h1>Panel · CRM Repuestos</h1>
+    <p class="sub">Uso interno del taller (Julio y Matías).</p>
+    <p class="error" id="login-error" hidden>Usuario o clave incorrectos.</p>
+    <div class="field"><label for="login-user">Usuario</label>
+      <input id="login-user" placeholder="julio o matias"></div>
+    <div class="field"><label for="login-pass">Contraseña</label>
+      <input id="login-pass" type="password" placeholder="••••"></div>
+    <button class="btn block" type="submit">Entrar</button>
+    <p class="aviso">Acceso básico (cortina): esta página es pública aunque no esté indexada.
+      No guardar datos sensibles acá.</p>
+  </form>
+</div>
+
+<!-- APP -->
+<div id="app-view" hidden>
+  <div class="topbar"><div class="wrap">
+    <h1>Panel · CRM Repuestos</h1>
+    <span class="user-pill" id="user-pill">—</span>
+    <button class="btn ghost small" id="btn-salir" type="button">Salir</button>
+  </div></div>
+  <nav class="tabs" aria-label="Secciones"><div class="wrap" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="resumen">Resumen</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="stock">Stock</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="ventas">Ventas</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="comisiones">Comisiones</button>
+  </div></nav>
+
+  <main><div class="wrap">
+    <!-- RESUMEN -->
+    <section id="tab-resumen">
+      <div class="kpis">
+        <div class="kpi"><p>SKUs publicados</p><strong id="k-skus">—</strong><small id="k-skus-sub"></small></div>
+        <div class="kpi"><p>Stock valorizado (venta)</p><strong id="k-val">—</strong><small>precio venta × stock</small></div>
+        <div class="kpi"><p>Quiebres / bajos</p><strong id="k-q">—</strong><small>stock ≤ mínimo</small></div>
+        <div class="kpi"><p>Ventas cobradas</p><strong id="k-v">—</strong><small id="k-v-sub"></small></div>
+      </div>
+      <div class="card">
+        <h2>Reponer pronto</h2>
+        <div class="table-wrap"><table id="t-quiebres">
+          <tr><th>SKU</th><th>Nombre</th><th class="num">Stock</th><th class="num">Mín</th><th>Estado</th></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- STOCK -->
+    <section id="tab-stock" hidden>
+      <div class="card">
+        <h2>Stock</h2>
+        <div class="toolbar-row">
+          <div class="field"><label for="stk-q">Buscar</label>
+            <input id="stk-q" type="search" placeholder="SKU, nombre, marca…"></div>
+          <button class="btn small" id="btn-csv-stock" type="button">Descargar stock.csv</button>
+          <button class="btn ghost small" id="btn-reset-stock" type="button">Revertir cambios</button>
+        </div>
+        <div class="table-wrap"><table id="t-stock">
+          <tr><th>SKU</th><th>Nombre</th><th>Marca</th><th>Rubro</th>
+            <th class="num">P. venta</th><th class="num">Stock</th><th>Estado</th></tr>
+        </table></div>
+        <p class="hint">Editá precio y stock directo en la tabla. Después descargá el CSV y
+          reemplazá <code>docs/data/stock.csv</code> en el repo (un commit) para publicar.</p>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section id="tab-ventas" hidden>
+      <div class="card">
+        <h2>Cargar venta</h2>
+        <form id="venta-form">
+          <div class="toolbar-row">
+            <div class="field"><label for="v-fecha">Fecha</label><input id="v-fecha" type="date" required></div>
+            <div class="field"><label for="v-sku">Producto</label><select id="v-sku" required></select></div>
+            <div class="field"><label for="v-cant">Cant.</label><input id="v-cant" type="number" min="1" value="1" required></div>
+            <div class="field"><label for="v-monto">Monto $</label><input id="v-monto" type="number" min="0" step="0.01" required></div>
+          </div>
+          <div class="toolbar-row">
+            <div class="field"><label for="v-canal">Canal</label>
+              <select id="v-canal"><option value="web">web</option><option value="local">local</option><option value="redes">redes</option></select></div>
+            <div class="field"><label for="v-vend">Vendedor</label>
+              <select id="v-vend"><option value="julio">julio</option><option value="matias">matias</option><option value="local">local</option></select></div>
+            <div class="field"><label for="v-estado">Estado</label>
+              <select id="v-estado"><option value="cobrada">cobrada</option><option value="pendiente">pendiente</option><option value="entregada">entregada</option></select></div>
+            <div class="field"><label for="v-pct">Comisión %</label><input id="v-pct" type="number" min="0" max="100" step="0.5" value="10"></div>
+          </div>
+          <div class="toolbar-row">
+            <button class="btn small" type="submit">Agregar venta</button>
+            <button class="btn ghost small" id="btn-csv-ventas" type="button">Descargar ventas.csv</button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Ventas registradas</h2>
+        <div class="table-wrap"><table id="t-ventas">
+          <tr><th>Fecha</th><th>SKU</th><th class="num">Cant</th><th class="num">Monto</th>
+            <th>Canal</th><th>Vendedor</th><th>Estado</th><th class="num">Comisión</th></tr>
+        </table></div>
+        <p class="hint">Las filas nuevas viven en esta sesión hasta descargar el CSV y subirlo al repo.</p>
+      </div>
+    </section>
+
+    <!-- COMISIONES -->
+    <section id="tab-comisiones" hidden>
+      <div class="card">
+        <h2>Comisiones — regla v1</h2>
+        <div class="table-wrap"><table id="t-com">
+          <tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th><th class="num">Comisión</th></tr>
+        </table></div>
+        <p class="hint">julio/matías: 100%. local: 50/50. Solo cobrada/entregada suma.</p>
+      </div>
+      <div class="card">
+        <h2>Pendientes de cobro</h2>
+        <div class="table-wrap"><table id="t-pen">
+          <tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th></tr>
+        </table></div>
+      </div>
+    </section>
+  </div></main>
+  <footer>Panel interno · los cambios se publican reemplazando el CSV en el repo.</footer>
+</div>
+
 <script>
-const SOCIOS=["julio","matias"];
-function csv(t){const l=t.trim().split(/\r?\n/),h=l[0].split(",");return l.slice(1).filter(x=>x.trim()).map(r=>{const c=r.split(","),o={};h.forEach((k,i)=>o[k.trim()]=(c[i]||"").trim());return o})}
-const fmt=n=>"$"+Number(n||0).toLocaleString("es-AR",{minimumFractionDigits:2});
-Promise.all([fetch("data/ventas.csv",{cache:"no-store"}).then(r=>r.text()),fetch("data/stock.csv",{cache:"no-store"}).then(r=>r.text())]).then(([v,s])=>{
-  const tot={},pen={};
-  csv(v).forEach(r=>{
-    if(!r.sku||r.sku.toLowerCase().startsWith("ejemplo"))return;
-    const ven=(r.vendedor||"local").toLowerCase(),est=(r.estado||"pendiente").toLowerCase();
-    const m=parseFloat(r.monto||0)||0,c=parseFloat(r.comision_monto||0)||0;
-    if(est==="pendiente"){pen[ven]=pen[ven]||{n:0,m:0};pen[ven].n++;pen[ven].m+=m;return}
-    if(SOCIOS.includes(ven)){tot[ven]=tot[ven]||{n:0,m:0,c:0};tot[ven].n++;tot[ven].m+=m;tot[ven].c+=c}
-    else{SOCIOS.forEach(x=>{tot[x]=tot[x]||{n:0,m:0,c:0};tot[x].c+=c/2});tot["local (50/50)"]=tot["local (50/50)"]||{n:0,m:0,c:0};tot["local (50/50)"].n++;tot["local (50/50)"].m+=m;tot["local (50/50)"].c+=c}
+"use strict";
+const USUARIOS = { julio: "1234", matias: "1234" };
+const SOCIOS = Object.keys(USUARIOS);
+const STOCK_COLS = ["sku","nombre","marca","auto_compatible","tipo","precio_costo","precio_venta","stock","stock_minimo","foto","publicado","texto_auto"];
+const VENTAS_COLS = ["fecha","sku","cantidad","monto","canal","vendedor","estado","comision_pct","comision_monto","comprobante"];
+const $ = (id) => document.getElementById(id);
+const fmt$ = (n) => "$" + Number(n || 0).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* CSV con comillas (parser + serializador) */
+function parseCSV(text) {
+  const rows = []; let cur = [""], q = false;
+  const push = () => { rows.push(cur); cur = [""]; };
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cur[cur.length - 1] += '"'; i++; } else q = false; }
+      else cur[cur.length - 1] += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") cur.push("");
+    else if (c === "\n") push();
+    else if (c !== "\r") cur[cur.length - 1] += c;
+  }
+  if (cur.length > 1 || cur[0] !== "") push();
+  const head = rows[0].map((h) => h.trim());
+  return rows.slice(1).filter((r) => r.some((x) => x.trim())).map((r) => {
+    const o = {}; head.forEach((k, j) => { o[k] = (r[j] ?? "").trim(); }); return o;
   });
-  document.getElementById("t-com").innerHTML+=[...SOCIOS,"local (50/50)"].filter(k=>tot[k]).map(k=>`<tr><td>${k}</td><td class="num">${tot[k].n}</td><td class="num">${fmt(tot[k].m)}</td><td class="num">${fmt(tot[k].c||0)}</td></tr>`).join("");
-  document.getElementById("t-pen").innerHTML+=Object.entries(pen).map(([k,d])=>`<tr><td>${k}</td><td class="num">${d.n}</td><td class="num">${fmt(d.m)}</td></tr>`).join("")||'<tr><td colspan="3">Sin pendientes 🎉</td></tr>';
-  document.getElementById("t-stk").innerHTML+=csv(s).filter(r=>r.sku&&(parseFloat(r.stock||0)<=(parseFloat(r.stock_minimo||1)))).map(r=>{const st=+r.stock||0;const cls=st<=0?"out":"warn";const txt=st<=0?"QUIEBRE":"BAJO";return `<tr><td>${r.sku}</td><td>${r.nombre||""}</td><td class="num">${st}</td><td class="num">${r.stock_minimo}</td><td class="${cls}">${txt}</td></tr>`}).join("")||'<tr><td colspan="5" class="ok">Sin quiebres</td></tr>';
+}
+const csvCell = (v) => { v = String(v ?? ""); return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+const toCSV = (cols, rows) => cols.map(csvCell).join(",") + "\n" + rows.map((r) => cols.map((c) => csvCell(r[c])).join(",")).join("\n") + "\n";
+function descargar(nombre, texto) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([texto], { type: "text/csv;charset=utf-8" }));
+  a.download = nombre; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* Estado */
+let STOCK = [], STOCK_ORIG = [], VENTAS = [];
+const num = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+const quiebre = (r) => num(r.stock) <= 0 ? "out" : num(r.stock) <= num(r.stock_minimo || 1) ? "low" : "ok";
+
+/* Login (cortina: no es seguridad real) */
+$("login-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const u = $("login-user").value.trim().toLowerCase(), p = $("login-pass").value;
+  if (USUARIOS[u] && USUARIOS[u] === p) {
+    sessionStorage.setItem("crm_admin", u);
+    entrar(u);
+  } else $("login-error").hidden = false;
 });
+$("btn-salir").addEventListener("click", () => { sessionStorage.removeItem("crm_admin"); location.reload(); });
+function entrar(u) {
+  $("login-view").hidden = true; $("app-view").hidden = false;
+  $("user-pill").textContent = u;
+  $("v-vend").value = SOCIOS.includes(u) ? u : "local";
+  cargar();
+}
+if (sessionStorage.getItem("crm_admin") && USUARIOS[sessionStorage.getItem("crm_admin")]) {
+  entrar(sessionStorage.getItem("crm_admin"));
+}
+
+/* Tabs */
+document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-selected", "false"));
+  b.setAttribute("aria-selected", "true");
+  for (const s of ["resumen", "stock", "ventas", "comisiones"]) $("tab-" + s).hidden = s !== b.dataset.tab;
+}));
+
+/* Carga */
+async function cargar() {
+  const [st, vt] = await Promise.all([
+    fetch("data/stock.csv", { cache: "no-store" }).then((r) => r.text()),
+    fetch("data/ventas.csv", { cache: "no-store" }).then((r) => r.text())
+  ]);
+  STOCK = parseCSV(st).filter((r) => r.sku);
+  STOCK_ORIG = JSON.parse(JSON.stringify(STOCK));
+  VENTAS = parseCSV(vt).filter((r) => r.sku);
+  $("v-fecha").value = new Date().toISOString().slice(0, 10);
+  const sel = $("v-sku");
+  sel.innerHTML = STOCK.map((r) => `<option value="${esc(r.sku)}">${esc(r.sku)} · ${esc(r.nombre)} ($${num(r.precio_venta).toLocaleString("es-AR")})</option>`).join("");
+  recalcMonto();
+  renderTodo();
+}
+const pill = (t, c) => `<span class="pill ${c}">${t}</span>`;
+
+/* Resumen */
+function renderResumen() {
+  const pub = STOCK.filter((r) => r.publicado === "si");
+  $("k-skus").textContent = pub.length;
+  $("k-skus-sub").textContent = STOCK.length + " SKUs totales";
+  $("k-val").textContent = fmt$(STOCK.reduce((a, r) => a + num(r.precio_venta) * num(r.stock), 0));
+  const q = STOCK.filter((r) => quiebre(r) !== "ok");
+  $("k-q").textContent = q.length;
+  const cob = VENTAS.filter((r) => ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()));
+  $("k-v").textContent = cob.length;
+  $("k-v-sub").textContent = fmt$(cob.reduce((a, r) => a + num(r.monto), 0));
+  $("t-quiebres").innerHTML = "<tr><th>SKU</th><th>Nombre</th><th class=\"num\">Stock</th><th class=\"num\">Mín</th><th>Estado</th></tr>" +
+    (q.map((r) => `<tr><td>${esc(r.sku)}</td><td>${esc(r.nombre)}</td><td class="num">${esc(r.stock)}</td><td class="num">${esc(r.stock_minimo)}</td><td>${pill(quiebre(r) === "out" ? "QUIEBRE" : "BAJO", quiebre(r))}</td></tr>`).join("") || '<tr><td colspan="5">Sin quiebres 🎉</td></tr>');
+}
+
+/* Stock */
+function renderStock() {
+  const q = ($("stk-q").value || "").toLowerCase();
+  const list = STOCK.filter((r) => !q || `${r.sku} ${r.nombre} ${r.marca} ${r.tipo}`.toLowerCase().includes(q));
+  $("t-stock").innerHTML = "<tr><th>SKU</th><th>Nombre</th><th>Marca</th><th>Rubro</th><th class=\"num\">P. venta</th><th class=\"num\">Stock</th><th>Estado</th></tr>" +
+    list.map((r) => { const k = quiebre(r); return `<tr class="${k === "ok" ? "" : k}"><td>${esc(r.sku)}</td><td>${esc(r.nombre)}</td><td>${esc(r.marca)}</td><td>${esc(r.tipo)}</td><td class="num"><input type="number" min="0" step="0.01" value="${esc(r.precio_venta)}" data-sku="${esc(r.sku)}" data-c="precio_venta" style="width:110px;text-align:right"></td><td class="num"><input type="number" min="0" step="1" value="${esc(r.stock)}" data-sku="${esc(r.sku)}" data-c="stock" style="width:70px;text-align:right"></td><td>${pill(k === "out" ? "QUIEBRE" : k === "low" ? "BAJO" : "OK", k)}</td></tr>`; }).join("");
+}
+$("stk-q").addEventListener("input", renderStock);
+$("t-stock").addEventListener("change", (e) => {
+  const { sku, c } = e.target.dataset; if (!sku) return;
+  const r = STOCK.find((x) => x.sku === sku); if (r) { r[c] = e.target.value; renderStock(); renderResumen(); }
+});
+$("btn-reset-stock").addEventListener("click", () => { STOCK = JSON.parse(JSON.stringify(STOCK_ORIG)); renderStock(); renderResumen(); });
+$("btn-csv-stock").addEventListener("click", () => descargar("stock.csv", toCSV(STOCK_COLS, STOCK)));
+
+/* Ventas */
+function recalcMonto() {
+  const r = STOCK.find((x) => x.sku === $("v-sku").value);
+  $("v-monto").value = r ? (num(r.precio_venta) * Math.max(1, +$("v-cant").value || 1)).toFixed(0) : "";
+}
+$("v-sku").addEventListener("change", recalcMonto);
+$("v-cant").addEventListener("input", recalcMonto);
+$("venta-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const cant = Math.max(1, +$("v-cant").value || 1), monto = num($("v-monto").value), pct = num($("v-pct").value);
+  VENTAS.push({ fecha: $("v-fecha").value, sku: $("v-sku").value, cantidad: String(cant), monto: String(monto), canal: $("v-canal").value, vendedor: $("v-vend").value, estado: $("v-estado").value, comision_pct: String(pct), comision_monto: (monto * pct / 100).toFixed(2), comprobante: "" });
+  const r = STOCK.find((x) => x.sku === $("v-sku").value);
+  if (r && $("v-estado").value !== "pendiente") r.stock = String(Math.max(0, num(r.stock) - cant));
+  renderTodo();
+});
+$("btn-csv-ventas").addEventListener("click", () => descargar("ventas.csv", toCSV(VENTAS_COLS, VENTAS)));
+function renderVentas() {
+  $("t-ventas").innerHTML = "<tr><th>Fecha</th><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">Monto</th><th>Canal</th><th>Vendedor</th><th>Estado</th><th class=\"num\">Comisión</th></tr>" +
+    [...VENTAS].reverse().map((r) => `<tr><td>${esc(r.fecha)}</td><td>${esc(r.sku)}</td><td class="num">${esc(r.cantidad)}</td><td class="num">${fmt$(r.monto)}</td><td>${esc(r.canal)}</td><td>${esc(r.vendedor)}</td><td>${pill((r.estado || "").toUpperCase(), ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()) ? "ok" : "low")}</td><td class="num">${fmt$(r.comision_monto)}</td></tr>`).join("");
+}
+
+/* Comisiones regla v1 */
+function renderComisiones() {
+  const tot = {}, pen = {};
+  for (const r of VENTAS) {
+    const v = (r.vendedor || "local").toLowerCase(), e = (r.estado || "pendiente").toLowerCase();
+    if (e === "pendiente") { pen[v] = pen[v] || { n: 0, m: 0 }; pen[v].n++; pen[v].m += num(r.monto); continue; }
+    if (SOCIOS.includes(v)) { tot[v] = tot[v] || { n: 0, m: 0, c: 0 }; tot[v].n++; tot[v].m += num(r.monto); tot[v].c += num(r.comision_monto); }
+    else { for (const s of SOCIOS) { tot[s] = tot[s] || { n: 0, m: 0, c: 0 }; tot[s].c += num(r.comision_monto) / 2; } tot["local (50/50)"] = tot["local (50/50)"] || { n: 0, m: 0, c: 0 }; tot["local (50/50)"].n++; tot["local (50/50)"].m += num(r.monto); tot["local (50/50)"].c += num(r.comision_monto); }
+  }
+  $("t-com").innerHTML = "<tr><th>Vendedor</th><th class=\"num\">Ventas</th><th class=\"num\">Monto</th><th class=\"num\">Comisión</th></tr>" +
+    [...SOCIOS, "local (50/50)"].filter((k) => tot[k]).map((k) => `<tr><td>${esc(k)}</td><td class="num">${tot[k].n}</td><td class="num">${fmt$(tot[k].m)}</td><td class="num">${fmt$(tot[k].c || 0)}</td></tr>`).join("");
+  $("t-pen").innerHTML = "<tr><th>Vendedor</th><th class=\"num\">Ventas</th><th class=\"num\">Monto</th></tr>" +
+    (Object.entries(pen).map(([k, d]) => `<tr><td>${esc(k)}</td><td class="num">${d.n}</td><td class="num">${fmt$(d.m)}</td></tr>`).join("") || '<tr><td colspan="3">Sin pendientes 🎉</td></tr>');
+}
+
+function renderTodo() { renderResumen(); renderStock(); renderVentas(); renderComisiones(); }
 </script>
 </body>
 </html>

@@ -5,70 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repuestos | Taller Chapa y Pintura</title>
 <meta name="description" content="Repuestos de todo tipo + taller de chapa y pintura. Consultá por WhatsApp con tu asesor.">
-<meta name="theme-color" content="#111418">
+<meta name="theme-color" content="#ffffff">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Repuestos | Taller Chapa y Pintura">
 <meta property="og:description" content="Repuestos de todo tipo + colocación y pintura en taller. Pedí por WhatsApp.">
 <meta name="twitter:card" content="summary">
 <style>
 :root{
-  --bg:#101318; --surface:#171c23; --surface-2:#1e2530; --line:#2b3442;
-  --txt:#f4f7fa; --mut:#a8b4c2; --acc:#ff6b1a; --acc-ink:#2a1200;
-  --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --wa:#25d366; --wa-ink:#052b18;
-  --r:14px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:40px;
+  --bg:#f3f5f8; --surface:#ffffff; --surface-2:#eef1f6; --line:#dde4ee;
+  --txt:#182230; --mut:#5d6c82; --acc:#9a3412; --acc-soft:#fff3ea;
+  --ok:#15803d; --ok-soft:#e9f7ef; --warn:#92400e; --warn-soft:#fef4e2;
+  --bad:#b91c1c; --bad-soft:#fdecec; --wa:#16a34a;
+  --r:12px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:40px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   background:var(--bg);color:var(--txt);line-height:1.5;min-height:100vh;
   -webkit-font-smoothing:antialiased}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
 .wrap{max-width:1120px;margin:0 auto;padding:0 var(--s4)}
-/* Header */
-header{background:linear-gradient(135deg,#151a21 0%,#202836 100%);
-  border-bottom:1px solid var(--line);padding:var(--s5) 0;position:sticky;top:0;z-index:10}
-.brand h1{font-size:1.15rem;font-weight:800;letter-spacing:.02em}
+header{background:var(--surface);border-bottom:1px solid var(--line);
+  padding:var(--s4) 0;position:sticky;top:0;z-index:10}
+.brand h1{font-size:1.15rem;font-weight:800;letter-spacing:.01em}
 .brand h1 span{color:var(--acc)}
-.brand p{color:var(--mut);font-size:.9rem;margin-top:var(--s1);max-width:60ch}
+.brand p{color:var(--mut);font-size:.9rem;margin-top:2px;max-width:62ch}
 .asesor{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s3);
-  background:rgba(15,118,110,.18);border:1px solid rgba(45,212,191,.35);color:#d7f5ef;
+  background:var(--acc-soft);border:1px solid #f2c9ab;color:#7c2d12;
   font-size:.8rem;padding:6px var(--s3);border-radius:999px}
-.asesor b{color:#fef08a;text-transform:capitalize}
-/* Toolbar */
+.asesor b{color:var(--acc);text-transform:capitalize}
 .toolbar{display:grid;grid-template-columns:1fr;gap:var(--s3);margin:var(--s4) auto;max-width:1120px;padding:0 var(--s4)}
 @media(min-width:760px){.toolbar{grid-template-columns:2fr 1fr 1fr auto;align-items:end}}
 .field{display:flex;flex-direction:column;gap:var(--s1)}
-.field label{font-size:.75rem;font-weight:600;color:var(--mut);letter-spacing:.03em}
+.field label{font-size:.75rem;font-weight:600;color:var(--mut)}
 input[type="search"],select{background:var(--surface);border:1px solid var(--line);color:var(--txt);
   border-radius:10px;padding:11px var(--s3);font-size:.95rem;width:100%}
-input[type="search"]::placeholder{color:#6b7889}
 .check{display:flex;align-items:center;gap:var(--s2);font-size:.85rem;color:var(--mut);padding-bottom:10px}
 .check input{width:18px;height:18px;accent-color:var(--acc)}
 .count{color:var(--mut);font-size:.85rem;max-width:1120px;margin:0 auto var(--s3);padding:0 var(--s4)}
-/* Grid + cards */
 .grid{display:grid;grid-template-columns:1fr;gap:var(--s4);max-width:1120px;margin:0 auto;padding:0 var(--s4) var(--s6)}
 @media(min-width:620px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,border-color .15s ease}
-.card:hover{transform:translateY(-2px);border-color:#3b475c}
-.thumb{background:var(--surface-2);min-height:132px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(24,34,48,.08)}
+.thumb{background:var(--surface-2);min-height:120px;display:flex;align-items:center;justify-content:center;
   font-size:2.2rem;border-bottom:1px solid var(--line)}
 .card-body{padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);flex:1}
-.eyebrow{font-size:.7rem;font-weight:700;color:var(--mut);letter-spacing:.06em;text-transform:uppercase}
+.eyebrow{font-size:.7rem;font-weight:700;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
 .card h2{font-size:1rem;font-weight:700;line-height:1.35}
 .compat{font-size:.82rem;color:var(--mut)}
-.desc{font-size:.85rem;color:#cfd8e2}
+.desc{font-size:.85rem;color:#33415a}
 .price{font-size:1.3rem;font-weight:800;margin-top:var(--s1)}
-.avail{font-size:.78rem;font-weight:700}
-.avail.ok{color:var(--ok)}.avail.low{color:var(--warn)}.avail.out{color:var(--bad)}
-.btn{display:block;text-align:center;background:var(--wa);color:var(--wa-ink);font-weight:800;
+.avail{display:inline-block;font-size:.76rem;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content}
+.avail.ok{background:var(--ok-soft);color:var(--ok)}
+.avail.low{background:var(--warn-soft);color:var(--warn)}
+.avail.out{background:var(--bad-soft);color:var(--bad)}
+.btn{display:block;text-align:center;background:var(--wa);color:#fff;font-weight:700;
   text-decoration:none;padding:var(--s3);border-radius:10px;margin-top:auto}
-.btn:hover{filter:brightness(1.07)}
-.btn[aria-disabled="true"]{background:var(--line);color:var(--mut);pointer-events:none}
+.btn:hover{filter:brightness(1.06)}
+.btn[aria-disabled="true"]{background:var(--surface-2);color:var(--mut);pointer-events:none}
 .empty{color:var(--mut);grid-column:1/-1;text-align:center;padding:var(--s6) 0}
-/* Footer */
-footer{border-top:1px solid var(--line);padding:var(--s5) var(--s4);color:var(--mut);font-size:.82rem;text-align:center}
+footer{border-top:1px solid var(--line);background:var(--surface);padding:var(--s5) var(--s4);
+  color:var(--mut);font-size:.82rem;text-align:center}
 footer nav{display:flex;gap:var(--s4);justify-content:center;flex-wrap:wrap;margin-bottom:var(--s2)}
 footer a{color:var(--acc)}
 </style>
