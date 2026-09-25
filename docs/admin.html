@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Comisiones y stock</title>
+<meta name="robots" content="noindex">
+<style>
+body{font-family:system-ui,sans-serif;background:#111418;color:#f2f5f8;max-width:900px;margin:0 auto;padding:20px}
+h1{font-size:1.2rem}h2{font-size:1rem;margin-top:26px;color:#ff6b1a}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:8px}
+th,td{border:1px solid #2a3340;padding:8px;text-align:left}
+th{background:#1b2129}.num{text-align:right}
+.warn{color:#f59e0b;font-weight:700}.out{color:#f87171;font-weight:700}.ok{color:#22c55e}
+p{color:#9aa7b5;font-size:.85rem}
+</style>
+</head>
+<body>
+<h1>Admin — comisiones y quiebres (uso interno, no indexar)</h1>
+<p>Lee <code>data/ventas.csv</code> y <code>data/stock.csv</code> en vivo. Regla v1: julio/matías 100%, local 50/50. Solo cobrada/entregada suma comisión.</p>
+<h2>Comisiones</h2>
+<table id="t-com"><tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th><th class="num">Comisión</th></tr></table>
+<h2>Pendientes de cobro</h2>
+<table id="t-pen"><tr><th>Vendedor</th><th class="num">Ventas</th><th class="num">Monto</th></tr></table>
+<h2>Quiebres de stock</h2>
+<table id="t-stk"><tr><th>SKU</th><th>Nombre</th><th class="num">Stock</th><th class="num">Mín</th><th>Estado</th></tr></table>
+<script>
+const SOCIOS=["julio","matias"];
+function csv(t){const l=t.trim().split(/\r?\n/),h=l[0].split(",");return l.slice(1).filter(x=>x.trim()).map(r=>{const c=r.split(","),o={};h.forEach((k,i)=>o[k.trim()]=(c[i]||"").trim());return o})}
+const fmt=n=>"$"+Number(n||0).toLocaleString("es-AR",{minimumFractionDigits:2});
+Promise.all([fetch("data/ventas.csv",{cache:"no-store"}).then(r=>r.text()),fetch("data/stock.csv",{cache:"no-store"}).then(r=>r.text())]).then(([v,s])=>{
+  const tot={},pen={};
+  csv(v).forEach(r=>{
+    if(!r.sku||r.sku.toLowerCase().startsWith("ejemplo"))return;
+    const ven=(r.vendedor||"local").toLowerCase(),est=(r.estado||"pendiente").toLowerCase();
+    const m=parseFloat(r.monto||0)||0,c=parseFloat(r.comision_monto||0)||0;
+    if(est==="pendiente"){pen[ven]=pen[ven]||{n:0,m:0};pen[ven].n++;pen[ven].m+=m;return}
+    if(SOCIOS.includes(ven)){tot[ven]=tot[ven]||{n:0,m:0,c:0};tot[ven].n++;tot[ven].m+=m;tot[ven].c+=c}
+    else{SOCIOS.forEach(x=>{tot[x]=tot[x]||{n:0,m:0,c:0};tot[x].c+=c/2});tot["local (50/50)"]=tot["local (50/50)"]||{n:0,m:0,c:0};tot["local (50/50)"].n++;tot["local (50/50)"].m+=m;tot["local (50/50)"].c+=c}
+  });
+  document.getElementById("t-com").innerHTML+=[...SOCIOS,"local (50/50)"].filter(k=>tot[k]).map(k=>`<tr><td>${k}</td><td class="num">${tot[k].n}</td><td class="num">${fmt(tot[k].m)}</td><td class="num">${fmt(tot[k].c||0)}</td></tr>`).join("");
+  document.getElementById("t-pen").innerHTML+=Object.entries(pen).map(([k,d])=>`<tr><td>${k}</td><td class="num">${d.n}</td><td class="num">${fmt(d.m)}</td></tr>`).join("")||'<tr><td colspan="3">Sin pendientes 🎉</td></tr>';
+  document.getElementById("t-stk").innerHTML+=csv(s).filter(r=>r.sku&&(parseFloat(r.stock||0)<=(parseFloat(r.stock_minimo||1)))).map(r=>{const st=+r.stock||0;const cls=st<=0?"out":"warn";const txt=st<=0?"QUIEBRE":"BAJO";return `<tr><td>${r.sku}</td><td>${r.nombre||""}</td><td class="num">${st}</td><td class="num">${r.stock_minimo}</td><td class="${cls}">${txt}</td></tr>`}).join("")||'<tr><td colspan="5" class="ok">Sin quiebres</td></tr>';
+});
+</script>
+</body>
+</html>

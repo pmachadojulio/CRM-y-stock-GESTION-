@@ -1,0 +1,30 @@
+name: sync-stock
+# Fase 2: trae el CSV publicado del Google Sheet y actualiza docs/data/stock.csv.
+# Requiere el secret SHEET_STOCK_CSV_URL (ver scripts/sync_sheet.py).
+# Por ahora corre solo manual (workflow_dispatch) para no pisar el CSV curado.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"  # diario 09:00 ARG; cambiar a manual hasta validar
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Sincronizar stock
+        env:
+          SHEET_URL: ${{ secrets.SHEET_STOCK_CSV_URL }}
+        run: |
+          if [ -z "$SHEET_URL" ]; then echo "Sin SHEET_STOCK_CSV_URL, no hago nada."; exit 0; fi
+          python scripts/sync_sheet.py "$SHEET_URL"
+      - name: Commit si cambió
+        run: |
+          git config user.name "stock-bot"; git config user.email "stock-bot@users.noreply.github.com"
+          git add docs/data/stock.csv
+          git diff --cached --quiet || git commit -m "chore: sync stock desde Sheet"
+          git push
