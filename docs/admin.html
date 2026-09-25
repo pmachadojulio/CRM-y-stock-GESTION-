@@ -172,6 +172,7 @@ footer{color:var(--mut);font-size:.78rem;text-align:center;padding:0 0 var(--s5)
             <div class="field"><label for="v-estado">Estado</label>
               <select id="v-estado"><option value="cobrada">cobrada</option><option value="pendiente">pendiente</option><option value="entregada">entregada</option></select></div>
             <div class="field"><label for="v-pct">Comisión %</label><input id="v-pct" type="number" min="0" max="100" step="0.5" value="10"></div>
+            <div class="field"><label for="v-tel">Tel. cliente (opcional)</label><input id="v-tel" placeholder="El que mandó por WhatsApp"></div>
           </div>
           <div class="toolbar-row">
             <button class="btn small" type="submit">Agregar venta</button>
@@ -275,7 +276,7 @@ footer{color:var(--mut);font-size:.78rem;text-align:center;padding:0 0 var(--s5)
 const USUARIOS = { julio: "1234", matias: "1234" };
 const SOCIOS = Object.keys(USUARIOS);
 const STOCK_COLS = ["sku","nombre","marca","auto_compatible","tipo","precio_costo","precio_venta","stock","stock_minimo","foto","publicado","texto_auto"];
-const VENTAS_COLS = ["fecha","sku","cantidad","monto","canal","vendedor","estado","comision_pct","comision_monto","comprobante"];
+const VENTAS_COLS = ["fecha","sku","cantidad","monto","canal","vendedor","estado","comision_pct","comision_monto","comprobante","cliente_tel"];
 const CLIENTES_COLS = ["nombre","telefono","patente","auto","notas"];
 const PRES_COLS = ["id","fecha","cliente","items","mano_obra","total","estado"];
 const ESTADOS_PRES = ["pendiente","en_taller","listo","entregada"];
@@ -412,15 +413,20 @@ $("v-cant").addEventListener("input", recalcMonto);
 $("venta-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const cant = Math.max(1, +$("v-cant").value || 1), monto = num($("v-monto").value), pct = num($("v-pct").value);
-  VENTAS.push({ fecha: $("v-fecha").value, sku: $("v-sku").value, cantidad: String(cant), monto: String(monto), canal: $("v-canal").value, vendedor: $("v-vend").value, estado: $("v-estado").value, comision_pct: String(pct), comision_monto: (monto * pct / 100).toFixed(2), comprobante: "" });
+  const tel = $("v-tel").value.trim();
+  VENTAS.push({ fecha: $("v-fecha").value, sku: $("v-sku").value, cantidad: String(cant), monto: String(monto), canal: $("v-canal").value, vendedor: $("v-vend").value, estado: $("v-estado").value, comision_pct: String(pct), comision_monto: (monto * pct / 100).toFixed(2), comprobante: "", cliente_tel: tel });
+  if (tel && !CLIENTES.some((c) => c.telefono === tel)) {
+    CLIENTES.push({ nombre: "(completar)", telefono: tel, patente: "", auto: "", notas: "Auto-creado desde una venta" });
+    $("p-cliente").innerHTML = CLIENTES.map((c) => `<option value="${esc(c.telefono)}">${esc(c.nombre)} · ${esc(c.telefono)}</option>`).join("");
+  }
   const r = STOCK.find((x) => x.sku === $("v-sku").value);
   if (r && $("v-estado").value !== "pendiente") r.stock = String(Math.max(0, num(r.stock) - cant));
   renderTodo();
 });
 $("btn-csv-ventas").addEventListener("click", () => descargar("ventas.csv", toCSV(VENTAS_COLS, VENTAS)));
 function renderVentas() {
-  $("t-ventas").innerHTML = "<tr><th>Fecha</th><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">Monto</th><th>Canal</th><th>Vendedor</th><th>Estado</th><th class=\"num\">Comisión</th></tr>" +
-    [...VENTAS].reverse().map((r) => `<tr><td>${esc(r.fecha)}</td><td>${esc(r.sku)}</td><td class="num">${esc(r.cantidad)}</td><td class="num">${fmt$(r.monto)}</td><td>${esc(r.canal)}</td><td>${esc(r.vendedor)}</td><td>${pill((r.estado || "").toUpperCase(), ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()) ? "ok" : "low")}</td><td class="num">${fmt$(r.comision_monto)}</td></tr>`).join("");
+  $("t-ventas").innerHTML = "<tr><th>Fecha</th><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">Monto</th><th>Canal</th><th>Vendedor</th><th>Cliente</th><th>Estado</th><th class=\"num\">Comisión</th></tr>" +
+    [...VENTAS].reverse().map((r) => `<tr><td>${esc(r.fecha)}</td><td>${esc(r.sku)}</td><td class="num">${esc(r.cantidad)}</td><td class="num">${fmt$(r.monto)}</td><td>${esc(r.canal)}</td><td>${esc(r.vendedor)}</td><td>${esc(r.cliente_tel)}</td><td>${pill((r.estado || "").toUpperCase(), ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()) ? "ok" : "low")}</td><td class="num">${fmt$(r.comision_monto)}</td></tr>`).join("");
 }
 
 /* Comisiones regla v1 */

@@ -35,6 +35,7 @@
 - [x] Panel: pestañas Clientes + Presupuestos (`docs/data/clientes.csv`, `presupuestos.csv`)
 - [x] Presupuesto: ítems + mano de obra, total vivo, estados pendiente > en taller > listo > entregada
 - [x] Aceptar descuenta stock (una sola vez, al pasar a en taller)
+- [x] Pedido web pide nombre/tel → viaja en el WhatsApp y la venta lo guarda (auto-crea ficha)
 - [ ] Probar circuito completo con un caso real (cliente + presupuesto + aceptar + venta)
 - [ ] Migrar a Supabase/Firebase solo cuando Sheet/CSV duela (>1000 SKUs)
 

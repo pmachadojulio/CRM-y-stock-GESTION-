@@ -223,9 +223,13 @@ footer.page a{color:var(--acc)}
   <div class="drawer" role="dialog" aria-modal="true" aria-label="Tu pedido">
     <header><div class="wrap"><h2>Tu pedido</h2></div></header>
     <div class="drawer-body">
-      <div class="field" style="margin-bottom:var(--s3)">
+      <div class="field" style="margin-bottom:var(--s2)">
         <label for="cli-nombre">Tu nombre (opcional, para atenderte más rápido)</label>
         <input id="cli-nombre" type="text" placeholder="Ej.: Juan, Gol Trend 2015" autocomplete="name">
+      </div>
+      <div class="field" style="margin-bottom:var(--s3)">
+        <label for="cli-tel">Tu teléfono (opcional, para confirmar stock y entrega)</label>
+        <input id="cli-tel" type="tel" inputmode="tel" placeholder="Ej.: 353 400-0000" autocomplete="tel">
       </div>
       <div id="lineas"></div>
     </div>
@@ -436,11 +440,14 @@ document.getElementById("btn-vaciar").addEventListener("click", () => {
 document.getElementById("btn-enviar").addEventListener("click", () => {
   const v = vendedor();
   const nombre = document.getElementById("cli-nombre").value.trim();
+  const tel = document.getElementById("cli-tel").value.trim();
+  const quien = nombre ? ", soy " + nombre : "";
+  const telTxt = tel ? " (mi tel: " + tel + ")" : "";
   const lineas = Object.entries(PEDIDO).map(([sku, n]) => {
     const i = porSku(sku);
     return `• ${i.sku} - ${i.nombre} x${n} (${CONFIG.moneda(i.precio_venta)} c/u) = ${CONFIG.moneda(i.precio_venta * n)}`;
   });
-  const texto = `Hola${nombre ? ", soy " + nombre : ""}, quiero hacer un pedido (vendedor: ${v}):\n${lineas.join("\n")}\nTotal: ${CONFIG.moneda(totalPedido())}`;
+  const texto = `Hola${quien}${telTxt}, quiero hacer un pedido (vendedor: ${v}):\n${lineas.join("\n")}\nTotal: ${CONFIG.moneda(totalPedido())}`;
   window.open(`https://wa.me/${numeroPara(v)}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
 });
 
