@@ -4,135 +4,219 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repuestos | Taller Chapa y Pintura</title>
-<meta name="description" content="Repuestos de todo tipo + taller de chapa y pintura. Consultá por WhatsApp.">
+<meta name="description" content="Repuestos de todo tipo + taller de chapa y pintura. Consultá por WhatsApp con tu asesor.">
+<meta name="theme-color" content="#111418">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Repuestos | Taller Chapa y Pintura">
+<meta property="og:description" content="Repuestos de todo tipo + colocación y pintura en taller. Pedí por WhatsApp.">
+<meta name="twitter:card" content="summary">
 <style>
-:root{--bg:#111418;--card:#1b2129;--line:#2a3340;--txt:#f2f5f8;--mut:#9aa7b5;--acc:#ff6b1a;--ok:#22c55e;--warn:#f59e0b}
+:root{
+  --bg:#101318; --surface:#171c23; --surface-2:#1e2530; --line:#2b3442;
+  --txt:#f4f7fa; --mut:#a8b4c2; --acc:#ff6b1a; --acc-ink:#2a1200;
+  --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --wa:#25d366; --wa-ink:#052b18;
+  --r:14px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:40px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
-header{background:linear-gradient(135deg,#1a1e24,#232a35);border-bottom:1px solid var(--line);padding:22px 16px;position:sticky;top:0;z-index:10}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.brand h1{font-size:1.35rem;letter-spacing:.3px}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--txt);line-height:1.5;min-height:100vh;
+  -webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--s4)}
+/* Header */
+header{background:linear-gradient(135deg,#151a21 0%,#202836 100%);
+  border-bottom:1px solid var(--line);padding:var(--s5) 0;position:sticky;top:0;z-index:10}
+.brand h1{font-size:1.15rem;font-weight:800;letter-spacing:.02em}
 .brand h1 span{color:var(--acc)}
-.brand p{color:var(--mut);font-size:.85rem;margin-top:4px}
-.badge{display:inline-block;background:#0f766e;color:#fff;font-size:.75rem;padding:6px 10px;border-radius:999px;margin-top:8px}
-.badge b{color:#fef08a}
-.controls{display:grid;grid-template-columns:1fr;gap:10px;margin:16px auto;max-width:1080px;padding:0 16px}
-@media(min-width:720px){.controls{grid-template-columns:2fr 1fr 1fr auto}}
-input,select{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font-size:.95rem;width:100%}
-label{font-size:.75rem;color:var(--mut);display:flex;align-items:center;gap:6px}
-.grid{display:grid;grid-template-columns:1fr;gap:14px;max-width:1080px;margin:0 auto;padding:0 16px 60px}
-@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
-@media(min-width:960px){.grid{grid-template-columns:1fr 1fr 1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.img{background:#0d1117;height:150px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:2rem}
-.body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
-.sku{font-size:.7rem;color:var(--mut);letter-spacing:.5px}
-.name{font-weight:700;font-size:1rem;line-height:1.3}
-.meta{font-size:.8rem;color:var(--mut)}
-.price{font-size:1.25rem;font-weight:800;margin-top:4px}
-.stock{font-size:.78rem;font-weight:700}
-.ok{color:var(--ok)}.low{color:var(--warn)}.out{color:#f87171}
-.btn{display:block;text-align:center;background:#25d366;color:#06281a;font-weight:800;text-decoration:none;padding:12px;border-radius:10px;margin-top:auto}
-.btn:hover{filter:brightness(1.05)}
-.btn.dis{background:var(--line);color:var(--mut);pointer-events:none}
-footer{border-top:1px solid var(--line);padding:20px 16px;color:var(--mut);font-size:.8rem;text-align:center}
+.brand p{color:var(--mut);font-size:.9rem;margin-top:var(--s1);max-width:60ch}
+.asesor{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s3);
+  background:rgba(15,118,110,.18);border:1px solid rgba(45,212,191,.35);color:#d7f5ef;
+  font-size:.8rem;padding:6px var(--s3);border-radius:999px}
+.asesor b{color:#fef08a;text-transform:capitalize}
+/* Toolbar */
+.toolbar{display:grid;grid-template-columns:1fr;gap:var(--s3);margin:var(--s4) auto;max-width:1120px;padding:0 var(--s4)}
+@media(min-width:760px){.toolbar{grid-template-columns:2fr 1fr 1fr auto;align-items:end}}
+.field{display:flex;flex-direction:column;gap:var(--s1)}
+.field label{font-size:.75rem;font-weight:600;color:var(--mut);letter-spacing:.03em}
+input[type="search"],select{background:var(--surface);border:1px solid var(--line);color:var(--txt);
+  border-radius:10px;padding:11px var(--s3);font-size:.95rem;width:100%}
+input[type="search"]::placeholder{color:#6b7889}
+.check{display:flex;align-items:center;gap:var(--s2);font-size:.85rem;color:var(--mut);padding-bottom:10px}
+.check input{width:18px;height:18px;accent-color:var(--acc)}
+.count{color:var(--mut);font-size:.85rem;max-width:1120px;margin:0 auto var(--s3);padding:0 var(--s4)}
+/* Grid + cards */
+.grid{display:grid;grid-template-columns:1fr;gap:var(--s4);max-width:1120px;margin:0 auto;padding:0 var(--s4) var(--s6)}
+@media(min-width:620px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-2px);border-color:#3b475c}
+.thumb{background:var(--surface-2);min-height:132px;display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;border-bottom:1px solid var(--line)}
+.card-body{padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);flex:1}
+.eyebrow{font-size:.7rem;font-weight:700;color:var(--mut);letter-spacing:.06em;text-transform:uppercase}
+.card h2{font-size:1rem;font-weight:700;line-height:1.35}
+.compat{font-size:.82rem;color:var(--mut)}
+.desc{font-size:.85rem;color:#cfd8e2}
+.price{font-size:1.3rem;font-weight:800;margin-top:var(--s1)}
+.avail{font-size:.78rem;font-weight:700}
+.avail.ok{color:var(--ok)}.avail.low{color:var(--warn)}.avail.out{color:var(--bad)}
+.btn{display:block;text-align:center;background:var(--wa);color:var(--wa-ink);font-weight:800;
+  text-decoration:none;padding:var(--s3);border-radius:10px;margin-top:auto}
+.btn:hover{filter:brightness(1.07)}
+.btn[aria-disabled="true"]{background:var(--line);color:var(--mut);pointer-events:none}
+.empty{color:var(--mut);grid-column:1/-1;text-align:center;padding:var(--s6) 0}
+/* Footer */
+footer{border-top:1px solid var(--line);padding:var(--s5) var(--s4);color:var(--mut);font-size:.82rem;text-align:center}
+footer nav{display:flex;gap:var(--s4);justify-content:center;flex-wrap:wrap;margin-bottom:var(--s2)}
 footer a{color:var(--acc)}
-.count{color:var(--mut);font-size:.85rem;max-width:1080px;margin:0 auto;padding:0 16px 10px}
 </style>
 </head>
 <body>
-<header><div class="wrap top">
-<div class="brand">
-<h1>TALLER <span>CHAPA &amp; PINTURA</span> · REPUESTOS</h1>
-<p>Repuestos de todo tipo + colocación y pintura en taller. Precios en ARS.</p>
-<div class="badge" id="asesor">Asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / MATIAS10</div>
-</div>
-</div></header>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <h1>TALLER <span>CHAPA &amp; PINTURA</span> · REPUESTOS</h1>
+      <p>Repuestos de todo tipo + colocación y pintura en taller. Precios en ARS, sujetos a stock.</p>
+      <p class="asesor" role="status">Tu asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / MATIAS10</p>
+    </div>
+  </div>
+</header>
 
-<div class="controls wrap">
-<input id="q" type="search" placeholder="Buscar: ej. paragolpe Gol, pastillas, batería...">
-<select id="f-tipo"><option value="">Todos los rubros</option></select>
-<select id="f-marca"><option value="">Todas las marcas</option></select>
-<label><input type="checkbox" id="f-stock" style="width:auto" checked> Solo con stock</label>
-</div>
-<div class="count" id="count"></div>
-<div class="grid" id="grid"></div>
+<main>
+  <div class="toolbar wrap" role="search" aria-label="Buscar repuestos">
+    <div class="field">
+      <label for="q">Buscar</label>
+      <input id="q" type="search" placeholder="Ej.: paragolpe Gol, pastillas, batería…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="f-tipo">Rubro</label>
+      <select id="f-tipo"><option value="">Todos</option></select>
+    </div>
+    <div class="field">
+      <label for="f-marca">Marca</label>
+      <select id="f-marca"><option value="">Todas</option></select>
+    </div>
+    <label class="check"><input type="checkbox" id="f-stock" checked> Solo con stock</label>
+  </div>
+
+  <p class="count" id="count" aria-live="polite"></p>
+  <div class="grid" id="grid"></div>
+  <noscript><p class="wrap" style="color:var(--warn)">Esta página necesita JavaScript para mostrar el catálogo.</p></noscript>
+</main>
 
 <footer>
-Pedidos por WhatsApp · <a id="wa-julio" href="https://wa.me/5493534018769">Julio</a> · <a id="wa-matias" href="https://wa.me/5493534128663">Matías</a> · Instalación en taller · Precios sujetos a stock ·
-<a href="data/stock.csv">ver stock.csv</a> · Hecho con GitHub Pages $0
+  <nav aria-label="Contacto">
+    <a href="https://wa.me/5493534018769">WhatsApp Julio</a>
+    <a href="https://wa.me/5493534128663">WhatsApp Matías</a>
+    <a href="data/stock.csv">Ver stock</a>
+  </nav>
+  <p>Instalación en taller disponible · Hecho con GitHub Pages</p>
 </footer>
 
 <script>
+"use strict";
 const CONFIG = {
   numeros: { julio: "5493534018769", matias: "5493534128663" },
   porDefecto: "julio",
-  moneda: (n) => "$" + Number(n||0).toLocaleString("es-AR")
+  moneda: (n) => "$" + Number(n || 0).toLocaleString("es-AR", { maximumFractionDigits: 0 })
 };
-const vendedoresValidos = Object.keys(CONFIG.numeros);
-// --- atribución first-touch ?v=julio|matias ---
-(function(){
-  const p = (new URLSearchParams(location.search).get("v")||"").toLowerCase().trim();
-  if (p && vendedoresValidos.includes(p)) localStorage.setItem("crm_vendedor", p);
-  else if (p && p !== "") localStorage.setItem("crm_vendedor", "local");
-  const v = localStorage.getItem("crm_vendedor") || "local";
-  document.getElementById("asesor-nombre").textContent = v;
+const VENDEDORES = Object.keys(CONFIG.numeros);
+const ASESOR_EL = document.getElementById("asesor-nombre");
+
+// Atribución first-touch: ?v=julio|matias → se recuerda en el navegador
+(function initAsesor() {
+  const p = (new URLSearchParams(location.search).get("v") || "").toLowerCase().trim();
+  if (p) localStorage.setItem("crm_vendedor", VENDEDORES.includes(p) ? p : "local");
+  ASESOR_EL.textContent = localStorage.getItem("crm_vendedor") || "local";
 })();
 const vendedor = () => localStorage.getItem("crm_vendedor") || "local";
 const numeroPara = (v) => CONFIG.numeros[v] || CONFIG.numeros[CONFIG.porDefecto];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-function parseCSV(t){
-  const lines = t.trim().split(/\r?\n/), h = lines[0].split(",");
-  return lines.slice(1).map(l=>{
-    // split simple por comas (sin comillas en nuestro csv)
-    const c = l.split(","); const o = {};
-    h.forEach((k,i)=>o[k.trim()]= (c[i]||"").trim());
-    o.precio_venta = Number(o.precio_venta||0); o.stock = Number(o.stock||0); o.stock_minimo = Number(o.stock_minimo||1);
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const head = lines[0].split(",");
+  return lines.slice(1).filter((l) => l.trim()).map((l) => {
+    const cols = l.split(",");
+    const o = {};
+    head.forEach((k, i) => { o[k.trim()] = (cols[i] || "").trim(); });
+    o.precio_venta = Number(o.precio_venta || 0);
+    o.stock = Number(o.stock || 0);
+    o.stock_minimo = Number(o.stock_minimo || 1);
     return o;
   });
 }
+
 let ITEMS = [];
-async function load(){
-  const r = await fetch("data/stock.csv", {cache:"no-store"});
-  ITEMS = parseCSV(await r.text()).filter(x=>x.sku && x.publicado==="si");
-  const tipos = [...new Set(ITEMS.map(i=>i.tipo).filter(Boolean))];
-  const marcas = [...new Set(ITEMS.map(i=>i.marca).filter(Boolean))];
+async function load() {
+  try {
+    const res = await fetch("data/stock.csv", { cache: "no-store" });
+    if (!res.ok) throw new Error(res.status);
+    ITEMS = parseCSV(await res.text()).filter((x) => x.sku && x.publicado === "si");
+  } catch {
+    document.getElementById("grid").innerHTML =
+      '<p class="empty">No se pudo cargar el stock. Revisá tu conexión e intentá de nuevo.</p>';
+    return;
+  }
+  const tipos = [...new Set(ITEMS.map((i) => i.tipo).filter(Boolean))].sort();
+  const marcas = [...new Set(ITEMS.map((i) => i.marca).filter(Boolean))].sort();
   const ft = document.getElementById("f-tipo"), fm = document.getElementById("f-marca");
-  tipos.forEach(t=>{const o=document.createElement("option");o.value=o.textContent=t;ft.appendChild(o)});
-  marcas.forEach(m=>{const o=document.createElement("option");o.value=o.textContent=m;fm.appendChild(o)});
+  for (const t of tipos) ft.add(new Option(t, t));
+  for (const m of marcas) fm.add(new Option(m, m));
   render();
 }
-function render(){
-  const q = document.getElementById("q").value.toLowerCase();
-  const t = document.getElementById("f-tipo").value, m = document.getElementById("f-marca").value;
-  const solo = document.getElementById("f-stock").checked;
+
+function disponibilidad(i) {
+  if (i.stock <= 0) return '<p class="avail out">Sin stock — consultanos reposición</p>';
+  if (i.stock <= i.stock_minimo) return `<p class="avail low">¡Últimas ${i.stock} unidades!</p>`;
+  return `<p class="avail ok">En stock (${i.stock})</p>`;
+}
+
+function render() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const t = document.getElementById("f-tipo").value;
+  const m = document.getElementById("f-marca").value;
+  const soloStock = document.getElementById("f-stock").checked;
   const v = vendedor();
-  const list = ITEMS.filter(i=>{
-    if (solo && i.stock<=0) return false;
-    if (t && i.tipo!==t) return false;
-    if (m && i.marca!==m) return false;
-    if (q && !(i.nombre+" "+i.sku+" "+i.auto_compatible+" "+i.marca).toLowerCase().includes(q)) return false;
+  const list = ITEMS.filter((i) => {
+    if (soloStock && i.stock <= 0) return false;
+    if (t && i.tipo !== t) return false;
+    if (m && i.marca !== m) return false;
+    if (q && !`${i.nombre} ${i.sku} ${i.auto_compatible} ${i.marca}`.toLowerCase().includes(q)) return false;
     return true;
   });
-  document.getElementById("count").textContent = list.length + " productos" + (v!=="local" ? " · tu asesor: "+v : "");
-  document.getElementById("grid").innerHTML = list.map(i=>{
-    const st = i.stock<=0 ? '<span class="stock out">SIN STOCK — consultanos reposición</span>'
-      : i.stock<=i.stock_minimo ? `<span class="stock low">¡Últimas ${i.stock} unidades!</span>`
-      : `<span class="stock ok">En stock (${i.stock})</span>`;
-    const msg = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
+  document.getElementById("count").textContent =
+    `${list.length} producto${list.length === 1 ? "" : "s"}` + (v !== "local" ? ` · tu asesor: ${v}` : "");
+  const grid = document.getElementById("grid");
+  if (!list.length) {
+    grid.innerHTML = '<p class="empty">Sin resultados. Probá otra búsqueda o desactivá “Solo con stock”.</p>';
+    return;
+  }
+  grid.innerHTML = list.map((i) => {
+    const msg = encodeURIComponent(
+      `Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
     const wa = `https://wa.me/${numeroPara(v)}?text=${msg}`;
-    const dis = i.stock<=0 ? "dis" : "";
-    return `<div class="card"><div class="img">🔧</div><div class="body">
-      <div class="sku">${i.sku} · ${i.tipo||""} · ${i.marca||""}</div>
-      <div class="name">${i.nombre}</div>
-      <div class="meta">Compatible: ${i.auto_compatible||"—"}</div>
-      <div class="price">${CONFIG.moneda(i.precio_venta)}</div>${st}
-      <a class="btn ${dis}" href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-    </div></div>`;
-  }).join("") || "<p style='color:var(--mut)'>Sin resultados. Probá otra búsqueda o sacá el filtro de stock.</p>";
+    const sinStock = i.stock <= 0;
+    return `<article class="card">
+      <div class="thumb" aria-hidden="true">🔧</div>
+      <div class="card-body">
+        <p class="eyebrow">${esc(i.sku)} · ${esc(i.tipo)} · ${esc(i.marca)}</p>
+        <h2>${esc(i.nombre)}</h2>
+        <p class="compat">Compatible: ${esc(i.auto_compatible) || "—"}</p>
+        ${i.texto_auto ? `<p class="desc">${esc(i.texto_auto)}</p>` : ""}
+        <p class="price">${CONFIG.moneda(i.precio_venta)}</p>
+        ${disponibilidad(i)}
+        <a class="btn" href="${wa}" target="_blank" rel="noopener"${sinStock ? ' aria-disabled="true"' : ""}>Consultar por WhatsApp</a>
+      </div>
+    </article>`;
+  }).join("");
 }
-["q","f-tipo","f-marca","f-stock"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+
+for (const id of ["q", "f-tipo", "f-marca", "f-stock"]) {
+  document.getElementById(id).addEventListener("input", render);
+}
 load();
 </script>
 </body>
