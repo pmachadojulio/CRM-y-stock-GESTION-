@@ -21,7 +21,7 @@ Estamos haciendo un sistema propio, simple y barato (costo $0) que permita:
 | Julio | `pmachadojulio` (dueño del repo) | 5493534018769 | `?v=julio` |
 | Matías | `mativ93` | 5493534128663 | `?v=matias` |
 
-- Sin `?v` en el link → el WhatsApp va a Julio por defecto y el asesor figura como `local`.
+- Sin `?v` en el link → el WhatsApp va a Matías por defecto y el asesor figura como `local`.
 - Cupones de respaldo: `JULIO10` / `MATIAS10`.
 
 ## 3. Links

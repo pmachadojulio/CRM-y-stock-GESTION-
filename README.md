@@ -37,7 +37,7 @@ git add -A; git commit -m "feat: mi cambio"; git push -u origin feat/mi-cambio
 
 ## Comisiones (regla inicial v1)
 
-- Links: `?v=julio` → WhatsApp Julio (5493534018769) · `?v=matias` → WhatsApp Matías (5493534128663). Sin `?v` → Julio por defecto, asesor muestra `local`.
+- Links: `?v=julio` → WhatsApp Julio (5493534018769) · `?v=matias` → WhatsApp Matías (5493534128663). Sin `?v` → Matías por defecto, asesor muestra `local`.
 - El `?v=` se guarda en el navegador (first-touch) + va en el mensaje de WhatsApp.
 - Respaldo manual: cupón `JULIO10` / `MATIAS10`.
 - Venta local sin atribución: 50/50. Venta con `?v=` o cupón: 100% al vendedor.
