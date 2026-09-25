@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repuestos | Taller Chapa y Pintura</title>
+<meta name="description" content="Repuestos de todo tipo + taller de chapa y pintura. Consultá por WhatsApp.">
+<style>
+:root{--bg:#111418;--card:#1b2129;--line:#2a3340;--txt:#f2f5f8;--mut:#9aa7b5;--acc:#ff6b1a;--ok:#22c55e;--warn:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+header{background:linear-gradient(135deg,#1a1e24,#232a35);border-bottom:1px solid var(--line);padding:22px 16px;position:sticky;top:0;z-index:10}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand h1{font-size:1.35rem;letter-spacing:.3px}
+.brand h1 span{color:var(--acc)}
+.brand p{color:var(--mut);font-size:.85rem;margin-top:4px}
+.badge{display:inline-block;background:#0f766e;color:#fff;font-size:.75rem;padding:6px 10px;border-radius:999px;margin-top:8px}
+.badge b{color:#fef08a}
+.controls{display:grid;grid-template-columns:1fr;gap:10px;margin:16px auto;max-width:1080px;padding:0 16px}
+@media(min-width:720px){.controls{grid-template-columns:2fr 1fr 1fr auto}}
+input,select{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font-size:.95rem;width:100%}
+label{font-size:.75rem;color:var(--mut);display:flex;align-items:center;gap:6px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;max-width:1080px;margin:0 auto;padding:0 16px 60px}
+@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:960px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.img{background:#0d1117;height:150px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:2rem}
+.body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.sku{font-size:.7rem;color:var(--mut);letter-spacing:.5px}
+.name{font-weight:700;font-size:1rem;line-height:1.3}
+.meta{font-size:.8rem;color:var(--mut)}
+.price{font-size:1.25rem;font-weight:800;margin-top:4px}
+.stock{font-size:.78rem;font-weight:700}
+.ok{color:var(--ok)}.low{color:var(--warn)}.out{color:#f87171}
+.btn{display:block;text-align:center;background:#25d366;color:#06281a;font-weight:800;text-decoration:none;padding:12px;border-radius:10px;margin-top:auto}
+.btn:hover{filter:brightness(1.05)}
+.btn.dis{background:var(--line);color:var(--mut);pointer-events:none}
+footer{border-top:1px solid var(--line);padding:20px 16px;color:var(--mut);font-size:.8rem;text-align:center}
+footer a{color:var(--acc)}
+.count{color:var(--mut);font-size:.85rem;max-width:1080px;margin:0 auto;padding:0 16px 10px}
+</style>
+</head>
+<body>
+<header><div class="wrap top">
+<div class="brand">
+<h1>TALLER <span>CHAPA &amp; PINTURA</span> · REPUESTOS</h1>
+<p>Repuestos de todo tipo + colocación y pintura en taller. Precios en ARS.</p>
+<div class="badge" id="asesor">Asesor: <b id="asesor-nombre">local</b> · Cupones: JULIO10 / SOCIO10</div>
+</div>
+</div></header>
+
+<div class="controls wrap">
+<input id="q" type="search" placeholder="Buscar: ej. paragolpe Gol, pastillas, batería...">
+<select id="f-tipo"><option value="">Todos los rubros</option></select>
+<select id="f-marca"><option value="">Todas las marcas</option></select>
+<label><input type="checkbox" id="f-stock" style="width:auto" checked> Solo con stock</label>
+</div>
+<div class="count" id="count"></div>
+<div class="grid" id="grid"></div>
+
+<footer>
+Pedidos por WhatsApp · Instalación en taller disponible · Precios sujetos a stock ·
+<a href="data/stock.csv">ver stock.csv</a> · Hecho con GitHub Pages $0
+</footer>
+
+<script>
+const CONFIG = {
+  whatsapp: "5493510000000", // <-- CAMBIAR por el número real sin + ni espacios
+  vendedores: ["julio", "socio"], // <-- cambiar "socio" por el nombre del amigo
+  moneda: (n) => "$" + Number(n||0).toLocaleString("es-AR")
+};
+// --- atribución first-touch ?v= ---
+(function(){
+  const p = new URLSearchParams(location.search).get("v");
+  if (p) localStorage.setItem("crm_vendedor", p.toLowerCase().trim());
+  const v = localStorage.getItem("crm_vendedor") || "local";
+  document.getElementById("asesor-nombre").textContent = v;
+})();
+const vendedor = () => localStorage.getItem("crm_vendedor") || "local";
+
+function parseCSV(t){
+  const lines = t.trim().split(/\r?\n/), h = lines[0].split(",");
+  return lines.slice(1).map(l=>{
+    // split simple por comas (sin comillas en nuestro csv)
+    const c = l.split(","); const o = {};
+    h.forEach((k,i)=>o[k.trim()]= (c[i]||"").trim());
+    o.precio_venta = Number(o.precio_venta||0); o.stock = Number(o.stock||0); o.stock_minimo = Number(o.stock_minimo||1);
+    return o;
+  });
+}
+let ITEMS = [];
+async function load(){
+  const r = await fetch("data/stock.csv", {cache:"no-store"});
+  ITEMS = parseCSV(await r.text()).filter(x=>x.sku && x.publicado==="si");
+  const tipos = [...new Set(ITEMS.map(i=>i.tipo).filter(Boolean))];
+  const marcas = [...new Set(ITEMS.map(i=>i.marca).filter(Boolean))];
+  const ft = document.getElementById("f-tipo"), fm = document.getElementById("f-marca");
+  tipos.forEach(t=>{const o=document.createElement("option");o.value=o.textContent=t;ft.appendChild(o)});
+  marcas.forEach(m=>{const o=document.createElement("option");o.value=o.textContent=m;fm.appendChild(o)});
+  render();
+}
+function render(){
+  const q = document.getElementById("q").value.toLowerCase();
+  const t = document.getElementById("f-tipo").value, m = document.getElementById("f-marca").value;
+  const solo = document.getElementById("f-stock").checked;
+  const v = vendedor();
+  const list = ITEMS.filter(i=>{
+    if (solo && i.stock<=0) return false;
+    if (t && i.tipo!==t) return false;
+    if (m && i.marca!==m) return false;
+    if (q && !(i.nombre+" "+i.sku+" "+i.auto_compatible+" "+i.marca).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById("count").textContent = list.length + " productos" + (v!=="local" ? " · tu asesor: "+v : "");
+  document.getElementById("grid").innerHTML = list.map(i=>{
+    const st = i.stock<=0 ? '<span class="stock out">SIN STOCK — consultanos reposición</span>'
+      : i.stock<=i.stock_minimo ? `<span class="stock low">¡Últimas ${i.stock} unidades!</span>`
+      : `<span class="stock ok">En stock (${i.stock})</span>`;
+    const msg = encodeURIComponent(`Hola, vengo de la web (vendedor: ${v}). Me interesa ${i.sku} - ${i.nombre} (${CONFIG.moneda(i.precio_venta)}). ¿Sigue disponible?`);
+    const wa = `https://wa.me/${CONFIG.whatsapp}?text=${msg}`;
+    const dis = i.stock<=0 ? "dis" : "";
+    return `<div class="card"><div class="img">🔧</div><div class="body">
+      <div class="sku">${i.sku} · ${i.tipo||""} · ${i.marca||""}</div>
+      <div class="name">${i.nombre}</div>
+      <div class="meta">Compatible: ${i.auto_compatible||"—"}</div>
+      <div class="price">${CONFIG.moneda(i.precio_venta)}</div>${st}
+      <a class="btn ${dis}" href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+    </div></div>`;
+  }).join("") || "<p style='color:var(--mut)'>Sin resultados. Probá otra búsqueda o sacá el filtro de stock.</p>";
+}
+["q","f-tipo","f-marca","f-stock"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+load();
+</script>
+</body>
+</html>

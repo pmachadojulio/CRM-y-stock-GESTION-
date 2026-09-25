@@ -1,0 +1,2 @@
+fecha,sku,cantidad,monto,canal,vendedor,estado,comision_pct,comision_monto,comprobante
+2026-09-20,ME-001,1,28000,web,julio,cobrada,10,2800,ejemplo: NO borrar cabecera — duplicar esta fila
