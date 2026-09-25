@@ -372,6 +372,14 @@ async function cargar() {
   renderTodo();
 }
 const pill = (t, c) => `<span class="pill ${c}">${t}</span>`;
+/* Normaliza teléfono AR a formato wa.me (549 + número) */
+function waNum(tel) {
+  const d = String(tel || "").replace(/\D/g, "");
+  if (!d) return "";
+  if (d.startsWith("54")) return d;
+  return "549" + d.replace(/^0+/, "").replace(/^15/, "");
+}
+const waLink = (tel, texto) => `https://wa.me/${waNum(tel)}?text=${encodeURIComponent(texto)}`;
 
 /* Resumen */
 function renderResumen() {
@@ -425,8 +433,12 @@ $("venta-form").addEventListener("submit", (e) => {
 });
 $("btn-csv-ventas").addEventListener("click", () => descargar("ventas.csv", toCSV(VENTAS_COLS, VENTAS)));
 function renderVentas() {
-  $("t-ventas").innerHTML = "<tr><th>Fecha</th><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">Monto</th><th>Canal</th><th>Vendedor</th><th>Cliente</th><th>Estado</th><th class=\"num\">Comisión</th></tr>" +
-    [...VENTAS].reverse().map((r) => `<tr><td>${esc(r.fecha)}</td><td>${esc(r.sku)}</td><td class="num">${esc(r.cantidad)}</td><td class="num">${fmt$(r.monto)}</td><td>${esc(r.canal)}</td><td>${esc(r.vendedor)}</td><td>${esc(r.cliente_tel)}</td><td>${pill((r.estado || "").toUpperCase(), ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()) ? "ok" : "low")}</td><td class="num">${fmt$(r.comision_monto)}</td></tr>`).join("");
+  $("t-ventas").innerHTML = "<tr><th>Fecha</th><th>SKU</th><th class=\"num\">Cant</th><th class=\"num\">Monto</th><th>Canal</th><th>Vendedor</th><th>Cliente</th><th>Estado</th><th class=\"num\">Comisión</th><th>Aviso</th></tr>" +
+    [...VENTAS].reverse().map((r) => {
+      const pend = (r.estado || "").toLowerCase() === "pendiente";
+      const aviso = pend && waNum(r.cliente_tel)
+        ? `<a class="btn ghost small" target="_blank" rel="noopener" href="${waLink(r.cliente_tel, `Hola, te escribimos de Repuestero por tu compra ${r.sku} de ${fmt$(r.monto)}. ¿Podés confirmarnos el pago? ¡Gracias!`)}">Reclamar</a>` : "—";
+      return `<tr><td>${esc(r.fecha)}</td><td>${esc(r.sku)}</td><td class="num">${esc(r.cantidad)}</td><td class="num">${fmt$(r.monto)}</td><td>${esc(r.canal)}</td><td>${esc(r.vendedor)}</td><td>${esc(r.cliente_tel)}</td><td>${pill((r.estado || "").toUpperCase(), ["cobrada", "entregada"].includes((r.estado || "").toLowerCase()) ? "ok" : "low")}</td><td class="num">${fmt$(r.comision_monto)}</td><td>${aviso}</td></tr>`; }).join("");
 }
 
 /* Comisiones regla v1 */
@@ -519,15 +531,19 @@ $("t-pres").addEventListener("click", (e) => {
 });
 $("btn-csv-pres").addEventListener("click", () => descargar("presupuestos.csv", toCSV(PRES_COLS, PRES)));
 function renderPresupuestos() {
-  $("t-pres").innerHTML = "<tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Ítems</th><th class=\"num\">Total</th><th>Estado</th><th></th></tr>" +
+  $("t-pres").innerHTML = "<tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Ítems</th><th class=\"num\">Total</th><th>Estado</th><th></th><th>Aviso</th></tr>" +
     ([...PRES].reverse().map((p) => {
       const cli = CLIENTES.find((c) => c.telefono === p.cliente);
+      const nombreCli = cli ? cli.nombre : p.cliente;
+      const msg = { pendiente: `Hola ${nombreCli}, te compartimos tu presupuesto ${p.id} de Repuestero por ${fmt$(p.total)}. ¿Lo confirmamos?`, en_taller: `Hola ${nombreCli}, tu trabajo ${p.id} ya está en el taller. Te avisamos cuando esté listo.`, listo: `Hola ${nombreCli}, ¡tu pedido ${p.id} ya está LISTO para retirar! Te esperamos.`, entregada: "" }[p.estado] || "";
       const acc = p.estado === "pendiente"
         ? `<button class="btn small" data-op="aceptar" data-id="${esc(p.id)}" type="button">Aceptar</button>`
         : p.estado === "entregada" ? pill("ENTREGADA", "ok")
         : `<button class="btn ghost small" data-op="avanzar" data-id="${esc(p.id)}" type="button">Avanzar → ${ESTADOS_PRES[ESTADOS_PRES.indexOf(p.estado) + 1].replace("_", " ")}</button>`;
-      return `<tr><td>${esc(p.id)}</td><td>${esc(p.fecha)}</td><td>${esc(cli ? cli.nombre : p.cliente)}</td><td><small>${esc(p.items)}</small></td><td class="num">${fmt$(p.total)}</td><td>${pill(p.estado.toUpperCase().replace("_", " "), p.estado === "pendiente" ? "low" : p.estado === "entregada" ? "ok" : "info")}</td><td>${acc}</td></tr>`;
-    }).join("") || '<tr><td colspan="7">Sin presupuestos todavía.</td></tr>');
+      const aviso = msg && waNum(p.cliente)
+        ? `<a class="btn ghost small" target="_blank" rel="noopener" href="${waLink(p.cliente, msg)}">WhatsApp</a>` : "—";
+      return `<tr><td>${esc(p.id)}</td><td>${esc(p.fecha)}</td><td>${esc(nombreCli)}</td><td><small>${esc(p.items)}</small></td><td class="num">${fmt$(p.total)}</td><td>${pill(p.estado.toUpperCase().replace("_", " "), p.estado === "pendiente" ? "low" : p.estado === "entregada" ? "ok" : "info")}</td><td>${acc}</td><td>${aviso}</td></tr>`;
+    }).join("") || '<tr><td colspan="8">Sin presupuestos todavía.</td></tr>');
 }
 
 function renderTodo() { renderResumen(); renderStock(); renderVentas(); renderComisiones(); renderClientes(); renderPresupuestos(); renderPresItems(); }

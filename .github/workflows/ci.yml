@@ -1,0 +1,30 @@
+name: ci
+# Valida todo en cada push/PR: stock, sintaxis python y JS del panel/catálogo.
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Compilar scripts python
+        run: python -m py_compile reporte_comisiones.py validar_stock.py generar_posts.py generar_snapshot.py scripts/*.py
+      - name: Validar stock
+        run: python validar_stock.py
+      - name: Chequear JS embebido
+        run: |
+          python - <<'EOF'
+          import re
+          for pagina in ("docs/index.html", "docs/admin.html"):
+              h = open(pagina, encoding="utf-8").read()
+              m = re.findall(r"<script>(.*?)</script>", h, re.S)
+              assert m, pagina
+              open("check_tmp.js", "w", encoding="utf-8").write(m[0])
+              print(pagina, "scripts:", len(m))
+          EOF
+      - run: node --check check_tmp.js

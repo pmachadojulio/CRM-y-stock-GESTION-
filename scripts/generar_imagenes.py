@@ -113,6 +113,20 @@ def placa_og():
     return img
 
 
+def iconos():
+    """Iconos PWA (se versionan: los referencia el manifest)."""
+    for tam in (192, 512):
+        img = Image.new("RGB", (tam, tam), (255, 255, 255))
+        d = ImageDraw.Draw(img)
+        m = tam // 8
+        d.rounded_rectangle([m, m, tam - m, tam - m], radius=tam // 6, fill=NARANJA)
+        f, _, _ = fuentes(tam // 2, tam // 2)
+        texto_centrado(d, tam // 2 - tam // 4, "R", f, (255, 255, 255), tam)
+        dest = BASE / "docs" / f"icon-{tam}.png"
+        img.save(dest)
+        print(f"OK: icono -> {dest}")
+
+
 def main():
     args = sys.argv[1:]
     OUT.mkdir(parents=True, exist_ok=True)
@@ -136,6 +150,8 @@ def main():
     if "--sku" not in args:
         placa_og().save(OG, quality=88)
         print(f"OK: marca -> {OG}")
+    if "--solo-og" in args or "--sku" not in args:
+        iconos()
 
 
 if __name__ == "__main__":
